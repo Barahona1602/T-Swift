@@ -68,6 +68,30 @@ func (s *BaseSwiftGrammarListener) EnterAssignstmt(ctx *AssignstmtContext) {}
 // ExitAssignstmt is called when production assignstmt is exited.
 func (s *BaseSwiftGrammarListener) ExitAssignstmt(ctx *AssignstmtContext) {}
 
+// EnterForstmt is called when production forstmt is entered.
+func (s *BaseSwiftGrammarListener) EnterForstmt(ctx *ForstmtContext) {}
+
+// ExitForstmt is called when production forstmt is exited.
+func (s *BaseSwiftGrammarListener) ExitForstmt(ctx *ForstmtContext) {}
+
+// EnterGuardstmt is called when production guardstmt is entered.
+func (s *BaseSwiftGrammarListener) EnterGuardstmt(ctx *GuardstmtContext) {}
+
+// ExitGuardstmt is called when production guardstmt is exited.
+func (s *BaseSwiftGrammarListener) ExitGuardstmt(ctx *GuardstmtContext) {}
+
+// EnterBreakstmt is called when production breakstmt is entered.
+func (s *BaseSwiftGrammarListener) EnterBreakstmt(ctx *BreakstmtContext) {}
+
+// ExitBreakstmt is called when production breakstmt is exited.
+func (s *BaseSwiftGrammarListener) ExitBreakstmt(ctx *BreakstmtContext) {}
+
+// EnterContinuestmt is called when production continuestmt is entered.
+func (s *BaseSwiftGrammarListener) EnterContinuestmt(ctx *ContinuestmtContext) {}
+
+// ExitContinuestmt is called when production continuestmt is exited.
+func (s *BaseSwiftGrammarListener) ExitContinuestmt(ctx *ContinuestmtContext) {}
+
 // EnterTypes is called when production types is entered.
 func (s *BaseSwiftGrammarListener) EnterTypes(ctx *TypesContext) {}
 

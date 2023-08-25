@@ -65,3 +65,20 @@ func (env Environment) SetVariable(id string, value Symbol) Symbol {
 	fmt.Println("La variable ", id, " no existe")
 	return Symbol{Lin: 0, Col: 0, Tipo: NULL, Valor: 0}
 }
+
+func (env Environment) LoopValidation() bool {
+	var tmpEnv Environment
+	tmpEnv = env
+	for {
+		if tmpEnv.Id == "WHILE" || tmpEnv.Id == "FOR" || tmpEnv.Id == "GUARD" {
+			return true
+		}
+		if tmpEnv.Anterior == nil {
+			break
+		} else {
+			tmpEnv = tmpEnv.Anterior.(Environment)
+		}
+	}
+	fmt.Println("la sentencia tiene que estar dentro de un ciclo")
+	return false
+}

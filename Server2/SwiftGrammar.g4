@@ -42,6 +42,10 @@ instruction returns [interfaces.Instruction inst]
 | declarationstmt { $inst = $declarationstmt.dec }
 | whilestmt { $inst = $whilestmt.whl }
 | assignstmt { $inst = $assignstmt.asg }
+| forstmt { $inst = $forstmt.fr }
+| guardstmt { $inst = $guardstmt.grd }
+| breakstmt { $inst = $breakstmt.brk }
+| continuestmt { $inst = $continuestmt.cnt }
 ;
 
 printstmt returns [interfaces.Instruction prnt]
@@ -65,9 +69,30 @@ declarationstmt returns [interfaces.Instruction dec]
 
 assignstmt returns [interfaces.Instruction asg]
 : ID op=IG expr { $asg = instructions.NewAssign($ID.line, $ID.pos, $ID.text, $expr.e) }
-| ID op=(SUB_IG|SUM_IG) expr { $asg = instructions.NewAssign($ID.line, $ID.pos, $ID.text, $expr.e) }
+| ID op=(SUB_IG | SUM_IG) expr { $asg = instructions.NewImplicitAssignment($ID.line, $ID.pos, $ID.text, $op.text, $expr.e); }
 ;
 
+forstmt returns [interfaces.Instruction fr]
+: FOR ID IN exp1=expr PUNTO PUNTO PUNTO exp2=expr LLAVEIZQ block LLAVEDER { $fr = instructions.NewForIn($FOR.line, $FOR.pos, $ID.text, $exp1.e, $exp2.e, $block.blk); }
+| FOR ID IN expr LLAVEIZQ block LLAVEDER { $fr = instructions.NewFor($FOR.line, $FOR.pos, $ID.text, $expr.e, $block.blk); }
+;
+
+guardstmt returns [interfaces.Instruction grd]
+: GUARD expr ELSE LLAVEIZQ block LLAVEDER { $grd = instructions.NewGuard($GUARD.line, $GUARD.pos, $expr.e, $block.blk) }
+;
+
+breakstmt returns [interfaces.Instruction brk]
+: BREAK { $brk = instructions.NewBreak($BREAK.line, $BREAK.pos) }
+;
+
+continuestmt returns [interfaces.Instruction cnt]
+: CONTINUE { $cnt = instructions.NewContinue($CONTINUE.line, $CONTINUE.pos) }
+;
+
+// returnstmt returns [interfaces.Instruction ret]
+// : RETURN expr { $ret = instructions.NewReturn($RETURN.line, $RETURN.pos, $expr.e) }
+// | RETURN { $ret = instructions.NewReturn($RETURN.line, $RETURN.pos, nil) }
+// ;
 
 types returns[environment.TipoExpresion ty]
 : INT { $ty = environment.INTEGER }
@@ -78,8 +103,8 @@ types returns[environment.TipoExpresion ty]
 ;
 
 expr returns [interfaces.Expression e]
-// : SUB opDe=expr {$e = expressions.NewOperation($SUB.line,$SUB.pos,$opDe.e,"NEGACION",nil)}
-: left=expr op=(SUB_IG|SUM_IG) expr { $e = expressions.NewOperation($op.line, $op.pos, nil, $op.text, $expr.e) }
+: SUB opDe=expr {$e = expressions.NewOperation($SUB.line,$SUB.pos,$opDe.e,"NEGACION",nil)}
+| left=expr op=(SUB_IG|SUM_IG) expr { $e = expressions.NewOperation($op.line, $op.pos, nil, $op.text, $expr.e) }
 | left=expr op=(MUL|DIV|MOD) right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=(ADD|SUB) right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=(MAY_IG|MAYOR) right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }

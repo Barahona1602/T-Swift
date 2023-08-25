@@ -31,6 +31,18 @@ type SwiftGrammarListener interface {
 	// EnterAssignstmt is called when entering the assignstmt production.
 	EnterAssignstmt(c *AssignstmtContext)
 
+	// EnterForstmt is called when entering the forstmt production.
+	EnterForstmt(c *ForstmtContext)
+
+	// EnterGuardstmt is called when entering the guardstmt production.
+	EnterGuardstmt(c *GuardstmtContext)
+
+	// EnterBreakstmt is called when entering the breakstmt production.
+	EnterBreakstmt(c *BreakstmtContext)
+
+	// EnterContinuestmt is called when entering the continuestmt production.
+	EnterContinuestmt(c *ContinuestmtContext)
+
 	// EnterTypes is called when entering the types production.
 	EnterTypes(c *TypesContext)
 
@@ -66,6 +78,18 @@ type SwiftGrammarListener interface {
 
 	// ExitAssignstmt is called when exiting the assignstmt production.
 	ExitAssignstmt(c *AssignstmtContext)
+
+	// ExitForstmt is called when exiting the forstmt production.
+	ExitForstmt(c *ForstmtContext)
+
+	// ExitGuardstmt is called when exiting the guardstmt production.
+	ExitGuardstmt(c *GuardstmtContext)
+
+	// ExitBreakstmt is called when exiting the breakstmt production.
+	ExitBreakstmt(c *BreakstmtContext)
+
+	// ExitContinuestmt is called when exiting the continuestmt production.
+	ExitContinuestmt(c *ContinuestmtContext)
 
 	// ExitTypes is called when exiting the types production.
 	ExitTypes(c *TypesContext)

@@ -14,33 +14,57 @@ type If struct {
 }
 
 func NewIf(lin int, col int, condition interfaces.Expression, bloque, elseBloque []interface{}) If {
-	ifInstr := If{lin, col, condition, bloque, elseBloque}
+	ifInstr := If{Lin: lin, Col: col, Expresion: condition, Bloque: bloque, ElseBloque: elseBloque}
 	return ifInstr
 }
 
 func (p If) Ejecutar(ast *environment.AST, env interface{}) interface{} {
-	var condicion environment.Symbol
-	condicion = p.Expresion.Ejecutar(ast, env)
-	// Validando tipo
+	condicion := p.Expresion.Ejecutar(ast, env)
+
 	if condicion.Tipo != environment.BOOLEAN {
 		ast.SetError("El tipo de variable es incorrecto para un If")
 		return nil
 	}
-	// Ejecutando if
+
 	if condicion.Valor == true {
-		var ifEnv environment.Environment
-		ifEnv = environment.NewEnvironment(env.(environment.Environment), "IF")
-		// Ejecución
+		ifEnv := environment.NewEnvironment(env.(environment.Environment), "IF")
+		breakFlag := false
+		continueFlag := false
+
 		for _, inst := range p.Bloque {
-			inst.(interfaces.Instruction).Ejecutar(ast, ifEnv)
+			if instruction, isInstruction := inst.(interfaces.Instruction); isInstruction {
+				result := instruction.Ejecutar(ast, ifEnv)
+				if sym, isSymbol := result.(environment.Symbol); isSymbol {
+					if sym.BreakFlag {
+						breakFlag = true
+						break
+					} else if sym.ContinueFlag {
+						continueFlag = true
+						break
+					}
+				}
+			}
+		}
+
+		if breakFlag {
+			return nil
+		}
+
+		if continueFlag {
+			return nil
 		}
 	} else {
-		// Ejecución para el bloque "else"
 		if p.ElseBloque != nil {
-			var elseEnv environment.Environment
-			elseEnv = environment.NewEnvironment(env.(environment.Environment), "ELSE")
+			elseEnv := environment.NewEnvironment(env.(environment.Environment), "ELSE")
 			for _, inst := range p.ElseBloque {
-				inst.(interfaces.Instruction).Ejecutar(ast, elseEnv)
+				if instruction, isInstruction := inst.(interfaces.Instruction); isInstruction {
+					result := instruction.Ejecutar(ast, elseEnv)
+					if sym, isSymbol := result.(environment.Symbol); isSymbol {
+						if sym.BreakFlag || sym.ContinueFlag {
+							return nil
+						}
+					}
+				}
 			}
 		}
 	}

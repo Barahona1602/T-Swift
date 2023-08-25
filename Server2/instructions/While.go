@@ -13,7 +13,7 @@ type While struct {
 }
 
 func NewWhile(lin int, col int, condition interfaces.Expression, bloque []interface{}) While {
-	whileInstr := While{lin, col, condition, bloque}
+	whileInstr := While{Lin: lin, Col: col, Expresion: condition, Bloque: bloque}
 	return whileInstr
 }
 
@@ -28,9 +28,30 @@ func (p While) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 
 		if condicion.Valor == true {
 			whileEnv := environment.NewEnvironment(env.(environment.Environment), "WHILE")
+			breakFlag := false
+			continueFlag := false
 
 			for _, inst := range p.Bloque {
-				inst.(interfaces.Instruction).Ejecutar(ast, whileEnv)
+				if instruction, isInstruction := inst.(interfaces.Instruction); isInstruction {
+					result := instruction.Ejecutar(ast, whileEnv)
+					if sym, isSymbol := result.(environment.Symbol); isSymbol {
+						if sym.BreakFlag {
+							breakFlag = true
+							break
+						} else if sym.ContinueFlag {
+							continueFlag = true
+							break
+						}
+					}
+				}
+			}
+
+			if breakFlag {
+				break
+			}
+
+			if continueFlag {
+				continue
 			}
 		} else {
 			break
