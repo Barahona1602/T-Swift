@@ -13,9 +13,6 @@ type SwiftGrammarListener interface {
 	// EnterBlock is called when entering the block production.
 	EnterBlock(c *BlockContext)
 
-	// EnterBlock2 is called when entering the block2 production.
-	EnterBlock2(c *Block2Context)
-
 	// EnterInstruction is called when entering the instruction production.
 	EnterInstruction(c *InstructionContext)
 
@@ -30,6 +27,9 @@ type SwiftGrammarListener interface {
 
 	// EnterDeclarationstmt is called when entering the declarationstmt production.
 	EnterDeclarationstmt(c *DeclarationstmtContext)
+
+	// EnterAssignstmt is called when entering the assignstmt production.
+	EnterAssignstmt(c *AssignstmtContext)
 
 	// EnterTypes is called when entering the types production.
 	EnterTypes(c *TypesContext)
@@ -49,9 +49,6 @@ type SwiftGrammarListener interface {
 	// ExitBlock is called when exiting the block production.
 	ExitBlock(c *BlockContext)
 
-	// ExitBlock2 is called when exiting the block2 production.
-	ExitBlock2(c *Block2Context)
-
 	// ExitInstruction is called when exiting the instruction production.
 	ExitInstruction(c *InstructionContext)
 
@@ -66,6 +63,9 @@ type SwiftGrammarListener interface {
 
 	// ExitDeclarationstmt is called when exiting the declarationstmt production.
 	ExitDeclarationstmt(c *DeclarationstmtContext)
+
+	// ExitAssignstmt is called when exiting the assignstmt production.
+	ExitAssignstmt(c *AssignstmtContext)
 
 	// ExitTypes is called when exiting the types production.
 	ExitTypes(c *TypesContext)

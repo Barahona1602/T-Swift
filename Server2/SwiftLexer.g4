@@ -60,6 +60,8 @@ AND:            '&&';
 IG:          '=';
 MAY_IG:     '>=';
 MEN_IG:     '<=';
+SUM_IG:     '+=';
+SUB_IG:     '-=';
 MAYOR:          '>';
 MENOR:          '<';
 MUL:            '*';

@@ -35,25 +35,13 @@ block returns [[]interface{} blk]
     }
 ;
 
-block2 returns [[]interface{} blk2]
-@init {
-    $blk2 = []interface{}{}
-    var listInt []IInstructionContext
-}
-: ins+=instruction+
-{
-    listInt = localctx.(*Block2Context).GetIns()
-    for _, e := range listInt {
-        $blk2 = append($blk2, e.GetInst())
-    }
-}
-;
 
 instruction returns [interfaces.Instruction inst]
 : printstmt { $inst = $printstmt.prnt}
 | ifstmt { $inst = $ifstmt.ifinst }
 | declarationstmt { $inst = $declarationstmt.dec }
 | whilestmt { $inst = $whilestmt.whl }
+| assignstmt { $inst = $assignstmt.asg }
 ;
 
 printstmt returns [interfaces.Instruction prnt]
@@ -62,17 +50,24 @@ printstmt returns [interfaces.Instruction prnt]
 
 ifstmt returns [interfaces.Instruction ifinst]
     : IF expr LLAVEIZQ block LLAVEDER { $ifinst = instructions.NewIf($IF.line, $IF.pos, $expr.e, $block.blk, nil) }
-    | IF expr LLAVEIZQ block LLAVEDER ELSE LLAVEIZQ block2 LLAVEDER { $ifinst = instructions.NewIf($IF.line, $IF.pos, $expr.e, $block.blk, $block2.blk2) }
+    | IF expr LLAVEIZQ e1=block LLAVEDER ELSE LLAVEIZQ e2=block LLAVEDER { $ifinst = instructions.NewIf($IF.line, $IF.pos, $expr.e, $e1.blk, $e2.blk) }
     | IF expr LLAVEIZQ block LLAVEDER ELSE ifstmt { $ifinst = instructions.NewIf($IF.line, $IF.pos, $expr.e, $block.blk, []interface{}{$ifstmt.ifinst}) }
 ;
 
 whilestmt returns [interfaces.Instruction whl]
-    : WHILE expr LLAVEIZQ block2 LLAVEDER { $whl = instructions.NewWhile($WHILE.line, $WHILE.pos, $expr.e, $block2.blk2) }
+    : WHILE expr LLAVEIZQ block LLAVEDER { $whl = instructions.NewWhile($WHILE.line, $WHILE.pos, $expr.e, $block.blk) }
 ;
 
 declarationstmt returns [interfaces.Instruction dec]
 : VAR ID D_PTS types IG expr  { $dec = instructions.NewDeclaration($VAR.line, $VAR.pos, $ID.text, $types.ty, $expr.e) }
+| LET ID D_PTS types IG expr  { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expr.e) }
 ;
+
+assignstmt returns [interfaces.Instruction asg]
+: ID op=IG expr { $asg = instructions.NewAssign($ID.line, $ID.pos, $ID.text, $expr.e) }
+| ID op=(SUB_IG|SUM_IG) expr { $asg = instructions.NewAssign($ID.line, $ID.pos, $ID.text, $expr.e) }
+;
+
 
 types returns[environment.TipoExpresion ty]
 : INT { $ty = environment.INTEGER }
@@ -83,7 +78,9 @@ types returns[environment.TipoExpresion ty]
 ;
 
 expr returns [interfaces.Expression e]
-: left=expr op=(MUL|DIV) right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
+// : SUB opDe=expr {$e = expressions.NewOperation($SUB.line,$SUB.pos,$opDe.e,"NEGACION",nil)}
+: left=expr op=(SUB_IG|SUM_IG) expr { $e = expressions.NewOperation($op.line, $op.pos, nil, $op.text, $expr.e) }
+| left=expr op=(MUL|DIV|MOD) right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=(ADD|SUB) right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=(MAY_IG|MAYOR) right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=(MEN_IG|MENOR) right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
@@ -93,7 +90,7 @@ expr returns [interfaces.Expression e]
 | PARIZQ expr PARDER { $e = $expr.e }
 | list=listArray { $e = $list.p}
 | CORIZQ listParams CORDER { $e = expressions.NewArray($CORIZQ.line, $CORIZQ.pos, $listParams.l) }
-| NUMBER                             
+| NUMBER
     {
         if (strings.Contains($NUMBER.text,".")){
             num,err := strconv.ParseFloat($NUMBER.text, 64);
@@ -113,10 +110,11 @@ expr returns [interfaces.Expression e]
     {
         str := $STRING.text
         $e = expressions.NewPrimitive($STRING.line, $STRING.pos, str[1:len(str)-1],environment.STRING)
-    }                        
+    }
 | TRU { $e = expressions.NewPrimitive($TRU.line, $TRU.pos, true, environment.BOOLEAN) }
 | FAL { $e = expressions.NewPrimitive($FAL.line, $FAL.pos, false, environment.BOOLEAN) }
 ;
+
 
 listParams returns[[]interface{} l]
 : list=listParams COMA expr {

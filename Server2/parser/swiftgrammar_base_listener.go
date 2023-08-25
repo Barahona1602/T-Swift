@@ -32,12 +32,6 @@ func (s *BaseSwiftGrammarListener) EnterBlock(ctx *BlockContext) {}
 // ExitBlock is called when production block is exited.
 func (s *BaseSwiftGrammarListener) ExitBlock(ctx *BlockContext) {}
 
-// EnterBlock2 is called when production block2 is entered.
-func (s *BaseSwiftGrammarListener) EnterBlock2(ctx *Block2Context) {}
-
-// ExitBlock2 is called when production block2 is exited.
-func (s *BaseSwiftGrammarListener) ExitBlock2(ctx *Block2Context) {}
-
 // EnterInstruction is called when production instruction is entered.
 func (s *BaseSwiftGrammarListener) EnterInstruction(ctx *InstructionContext) {}
 
@@ -67,6 +61,12 @@ func (s *BaseSwiftGrammarListener) EnterDeclarationstmt(ctx *DeclarationstmtCont
 
 // ExitDeclarationstmt is called when production declarationstmt is exited.
 func (s *BaseSwiftGrammarListener) ExitDeclarationstmt(ctx *DeclarationstmtContext) {}
+
+// EnterAssignstmt is called when production assignstmt is entered.
+func (s *BaseSwiftGrammarListener) EnterAssignstmt(ctx *AssignstmtContext) {}
+
+// ExitAssignstmt is called when production assignstmt is exited.
+func (s *BaseSwiftGrammarListener) ExitAssignstmt(ctx *AssignstmtContext) {}
 
 // EnterTypes is called when production types is entered.
 func (s *BaseSwiftGrammarListener) EnterTypes(ctx *TypesContext) {}

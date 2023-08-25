@@ -37,8 +37,12 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 	}
 
 	var op1, op2 environment.Symbol
-	op1 = o.Op_izq.Ejecutar(ast, env)
-	op2 = o.Op_der.Ejecutar(ast, env)
+	if o.Op_izq != nil {
+		op1 = o.Op_izq.Ejecutar(ast, env)
+	}
+	if o.Op_der != nil {
+		op2 = o.Op_der.Ejecutar(ast, env)
+	}
 	switch o.Operador {
 	case "+":
 		{
@@ -108,6 +112,20 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				ast.SetError("ERROR: No es posible Dividir")
 			}
 
+		}
+	case "%":
+		{
+			dominante = tabla_dominante[op1.Tipo][op2.Tipo]
+			if dominante == environment.INTEGER {
+				if op2.Valor.(int) != 0 {
+					newValue := op1.Valor.(int) % op2.Valor.(int)
+					return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: newValue}
+				} else {
+					ast.SetError("ERROR: No es posible realizar el módulo (%) con divisor cero")
+				}
+			} else {
+				ast.SetError("ERROR: No es posible realizar el módulo (%) con tipos no compatibles")
+			}
 		}
 	case "<":
 		{
@@ -231,6 +249,17 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				return op1
 			} else {
 				ast.SetError("ERROR: No es posible realizar -=")
+			}
+		}
+	case "NEGACION":
+		{
+			if op1.Tipo == environment.INTEGER {
+				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: op1.Tipo, Valor: 0 - op1.Valor.(int)}
+			} else if op1.Tipo == environment.FLOAT {
+				val1, _ := strconv.ParseFloat(fmt.Sprintf("%v", op1.Valor), 64)
+				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: op1.Tipo, Valor: 0 - val1}
+			} else {
+				fmt.Println("ERROR: tipo no compatible -")
 			}
 		}
 	}
