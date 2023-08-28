@@ -10,4 +10,5 @@ const (
 	NULL                         //4
 	ARRAY                        //5
 	RANGE                        //6
+	STR                          //7
 )

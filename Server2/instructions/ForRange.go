@@ -19,10 +19,6 @@ func NewForIn(lin int, col int, id string, exp1, exp2 interfaces.Expression, blo
 	return ForIn{Lin: lin, Col: col, Identifier: id, Expresion1: exp1, Expresion2: exp2, Bloque: bloque}
 }
 
-func NewForInString(lin int, col int, id string, exp1 interfaces.Expression, bloque []interface{}) ForIn {
-	return ForIn{Lin: lin, Col: col, Identifier: id, Expresion1: exp1, Bloque: bloque}
-}
-
 func (p ForIn) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 	if p.String != "" { // Verificar si es una cadena
 		for _, char := range p.String {

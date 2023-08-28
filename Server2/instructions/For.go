@@ -42,23 +42,31 @@ func (p For) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 		}
 
 	case environment.ARRAY:
-		arrValue := rangeExp.Valor.([]environment.Symbol)
-		for _, element := range arrValue {
-			// Create a new environment for the loop block
-			forEnv := environment.NewEnvironment(env.(environment.Environment), "FOR")
-
-			// Assign the current element to the variable x in the forEnv environment
-			forEnv.SaveVariable(p.Identifier, element)
-
-			// Execute the instructions in the loop block
-			for _, inst := range p.Bloque {
-				inst.(interfaces.Instruction).Ejecutar(ast, forEnv)
-			}
-		}
+		arrValue := rangeExp.Valor.([]interface{})
+		p.executeForLoop(ast, env, arrValue)
 
 	default:
 		ast.SetError("La expresión en el for debe ser una cadena o un vector")
 	}
 
 	return nil
+}
+
+func (p For) executeForLoop(ast *environment.AST, env interface{}, arrayValue []interface{}) {
+	for _, element := range arrayValue {
+		forEnv := environment.NewEnvironment(env.(environment.Environment), "FOR")
+		switch element.(type) {
+		case environment.Symbol:
+			forEnv.SaveVariable(p.Identifier, element.(environment.Symbol))
+		case []interface{}:
+			p.executeForLoop(ast, forEnv, element.([]interface{})) // Recursivamente manejar listas anidadas
+		default:
+			ast.SetError("Elemento no válido en la lista")
+			return
+		}
+
+		for _, inst := range p.Bloque {
+			inst.(interfaces.Instruction).Ejecutar(ast, forEnv)
+		}
+	}
 }

@@ -46,6 +46,9 @@ instruction returns [interfaces.Instruction inst]
 | guardstmt { $inst = $guardstmt.grd }
 | breakstmt { $inst = $breakstmt.brk }
 | continuestmt { $inst = $continuestmt.cnt }
+| fnArray { $inst = $fnArray.p }
+//| switchstmt { $inst = $switchstmt.swt }
+// | returnstmt { $inst = $returnstmt.ret }
 ;
 
 printstmt returns [interfaces.Instruction prnt]
@@ -81,6 +84,26 @@ guardstmt returns [interfaces.Instruction grd]
 : GUARD expr ELSE LLAVEIZQ block LLAVEDER { $grd = instructions.NewGuard($GUARD.line, $GUARD.pos, $expr.e, $block.blk) }
 ;
 
+// switchstmt returns [interfaces.Instruction swt]
+// : SWITCH expr LLAVEIZQ cases LLAVEDER { $swt = instructions.NewSwitch($SWITCH.line, $SWITCH.pos, $expr.e, $cases.cases) }
+// ;
+
+// cases returns [interfaces.Cases cases]
+// : case+=case+
+//     {
+//         var arr []interfaces.Case
+//         for _, e := range $case {
+//             arr = append(arr, e.c)
+//         }
+//         $cases = instructions.NewCases(arr)
+//     }
+// ;
+
+// case returns [interfaces.Case c]
+// : CASE expr D_PTS block { $c = instructions.NewCase($CASE.line, $CASE.pos, $expr.e, $block.blk) }
+// | RETURN expr D_PTS block { $c = instructions.NewCase($RETURN.line, $RETURN.pos, $expr.e, $block.blk) }
+// ;
+
 breakstmt returns [interfaces.Instruction brk]
 : BREAK { $brk = instructions.NewBreak($BREAK.line, $BREAK.pos) }
 ;
@@ -94,12 +117,19 @@ continuestmt returns [interfaces.Instruction cnt]
 // | RETURN { $ret = instructions.NewReturn($RETURN.line, $RETURN.pos, nil) }
 // ;
 
+fnArray returns[interfaces.Instruction p]
+: ID PUNTO APPEND PARIZQ expr PARDER { $p = instructions.NewAppend($ID.line, $ID.pos, $ID.text, $expr.e) }
+| ID PUNTO REMOVE PARIZQ AT D_PTS expr PARDER { $p = instructions.NewRemoveAt($ID.line, $ID.pos, $ID.text, $expr.e) }
+| ID PUNTO REMOVELAST PARIZQ PARDER { $p = instructions.NewRemoveLast($ID.line, $ID.pos, $ID.text) }
+;
+
 types returns[environment.TipoExpresion ty]
 : INT { $ty = environment.INTEGER }
 | FLOAT { $ty = environment.FLOAT }
 | STR { $ty = environment.STRING }
 | BOOL { $ty = environment.BOOLEAN }
-| CORIZQ CORDER { $ty = environment.ARRAY }
+| CORIZQ types CORDER { $ty = environment.ARRAY }
+| COMILLA STR COMILLA { $ty = environment.STR }
 ;
 
 expr returns [interfaces.Expression e]
@@ -113,6 +143,7 @@ expr returns [interfaces.Expression e]
 | left=expr op=AND right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=OR right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | PARIZQ expr PARDER { $e = $expr.e }
+| CORIZQ CORDER { $e = expressions.NewArray($CORIZQ.line, $CORIZQ.pos, nil) }
 | list=listArray { $e = $list.p}
 | CORIZQ listParams CORDER { $e = expressions.NewArray($CORIZQ.line, $CORIZQ.pos, $listParams.l) }
 | NUMBER
@@ -138,6 +169,8 @@ expr returns [interfaces.Expression e]
     }
 | TRU { $e = expressions.NewPrimitive($TRU.line, $TRU.pos, true, environment.BOOLEAN) }
 | FAL { $e = expressions.NewPrimitive($FAL.line, $FAL.pos, false, environment.BOOLEAN) }
+| ID PUNTO COUNT { $e = expressions.NewCount($ID.line, $ID.pos, $ID.text) }
+| ID PUNTO ISEMPTY { $e = expressions.NewIsEmpty($ID.line, $ID.pos, $ID.text) }
 ;
 
 
@@ -154,6 +187,7 @@ listParams returns[[]interface{} l]
 ;
 
 listArray returns[interfaces.Expression p]
-: list = listArray CORIZQ expr CORDER { $p = expressions.NewArrayAccess($list.start.GetLine(), $list.start.GetColumn(), $list.p, $expr.e) }
+: list = listArray types CORIZQ expr CORDER { $p = expressions.NewArrayAccess($list.start.GetLine(), $list.start.GetColumn(), $list.p, $expr.e) }
 | ID { $p = expressions.NewCallVar($ID.line, $ID.pos, $ID.text)}
 ;
+

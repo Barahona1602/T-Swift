@@ -60,8 +60,6 @@ AND:            '&&';
 IG:          '=';
 MAY_IG:     '>=';
 MEN_IG:     '<=';
-SUM_IG:     '+=';
-SUB_IG:     '-=';
 MAYOR:          '>';
 MENOR:          '<';
 MUL:            '*';
@@ -73,20 +71,14 @@ PARIZQ:         '(';
 PARDER:         ')';
 LLAVEIZQ:       '{';
 LLAVEDER:       '}';
-D_PTS:          ':';
-CORIZQ:         '[';
-CORDER:         ']';
-COMA:           ',';
-PUNTO:          '.';
-COMILLA:        '"';
 
 // skip
 WHITESPACE: [ \\\r\n\t]+ -> skip;
 COMMENT : '/*' .*? '*/' -> skip;
 LINE_COMMENT : '//' ~[\r\n]* -> skip;
 
+
 fragment
 ESC_SEQ
-    :   '\\' ('\\'|'@'|'['|']'|'.'|'#'|'+'|'-'|'!'|':'|' ')
+    :   '\\' ('\\' | '"' | '\n' | '\r' | '\t')
     ;
-

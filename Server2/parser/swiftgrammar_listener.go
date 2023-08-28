@@ -43,6 +43,9 @@ type SwiftGrammarListener interface {
 	// EnterContinuestmt is called when entering the continuestmt production.
 	EnterContinuestmt(c *ContinuestmtContext)
 
+	// EnterFnArray is called when entering the fnArray production.
+	EnterFnArray(c *FnArrayContext)
+
 	// EnterTypes is called when entering the types production.
 	EnterTypes(c *TypesContext)
 
@@ -90,6 +93,9 @@ type SwiftGrammarListener interface {
 
 	// ExitContinuestmt is called when exiting the continuestmt production.
 	ExitContinuestmt(c *ContinuestmtContext)
+
+	// ExitFnArray is called when exiting the fnArray production.
+	ExitFnArray(c *FnArrayContext)
 
 	// ExitTypes is called when exiting the types production.
 	ExitTypes(c *TypesContext)

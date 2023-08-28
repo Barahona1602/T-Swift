@@ -92,6 +92,12 @@ func (s *BaseSwiftGrammarListener) EnterContinuestmt(ctx *ContinuestmtContext) {
 // ExitContinuestmt is called when production continuestmt is exited.
 func (s *BaseSwiftGrammarListener) ExitContinuestmt(ctx *ContinuestmtContext) {}
 
+// EnterFnArray is called when production fnArray is entered.
+func (s *BaseSwiftGrammarListener) EnterFnArray(ctx *FnArrayContext) {}
+
+// ExitFnArray is called when production fnArray is exited.
+func (s *BaseSwiftGrammarListener) ExitFnArray(ctx *FnArrayContext) {}
+
 // EnterTypes is called when production types is entered.
 func (s *BaseSwiftGrammarListener) EnterTypes(ctx *TypesContext) {}
 
