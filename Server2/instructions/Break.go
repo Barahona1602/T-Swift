@@ -19,7 +19,7 @@ func (p Break) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 		Lin:       p.Lin,
 		Col:       p.Col,
 		Id:        "",
-		Tipo:      environment.NULL,
+		Tipo:      environment.NIL,
 		Valor:     nil,
 		Mutable:   true,
 		BreakFlag: true,

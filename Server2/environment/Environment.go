@@ -40,7 +40,7 @@ func (env Environment) GetVariable(id string) Symbol {
 		}
 	}
 	fmt.Println("La variable ", id, " no existe")
-	return Symbol{Lin: 0, Col: 0, Tipo: NULL, Valor: 0}
+	return Symbol{Lin: 0, Col: 0, Tipo: NIL, Valor: 0}
 }
 
 func (env Environment) SetVariable(id string, value Symbol) Symbol {
@@ -53,7 +53,7 @@ func (env Environment) SetVariable(id string, value Symbol) Symbol {
 				return variable
 			} else {
 				fmt.Println("El tipo de dato es incorrecto")
-				return Symbol{Lin: 0, Col: 0, Tipo: NULL, Valor: 0}
+				return Symbol{Lin: 0, Col: 0, Tipo: NIL, Valor: 0}
 			}
 		}
 		if tmpEnv.Anterior == nil {
@@ -63,7 +63,7 @@ func (env Environment) SetVariable(id string, value Symbol) Symbol {
 		}
 	}
 	fmt.Println("La variable ", id, " no existe")
-	return Symbol{Lin: 0, Col: 0, Tipo: NULL, Valor: 0}
+	return Symbol{Lin: 0, Col: 0, Tipo: NIL, Valor: 0}
 }
 
 func (env Environment) LoopValidation() bool {

@@ -41,6 +41,8 @@ func (p While) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 						} else if sym.ContinueFlag {
 							continueFlag = true
 							break
+						} else if sym.ReturnFlag {
+							return sym
 						}
 					}
 				}
@@ -60,4 +62,3 @@ func (p While) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 
 	return nil
 }
-

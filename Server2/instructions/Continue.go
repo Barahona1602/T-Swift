@@ -19,7 +19,7 @@ func (c Continue) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 		Lin:          c.Lin,
 		Col:          c.Col,
 		Id:           "",
-		Tipo:         environment.NULL,
+		Tipo:         environment.NIL,
 		Valor:        nil,
 		Mutable:      true,
 		ContinueFlag: true,

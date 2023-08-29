@@ -34,8 +34,8 @@ func (p ForIn) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 			})
 
 			// Ejecutar las instrucciones en el bloque del for
-			for _, inst := range p.Bloque {
-				inst.(interfaces.Instruction).Ejecutar(ast, forEnv)
+			if p.executeForInLoop(ast, forEnv) {
+				return nil // Handle the return statement
 			}
 		}
 	} else { // Si no es una cadena, asumir que es un rango numérico
@@ -60,11 +60,27 @@ func (p ForIn) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 			})
 
 			// Ejecutar las instrucciones en el bloque del for
-			for _, inst := range p.Bloque {
-				inst.(interfaces.Instruction).Ejecutar(ast, forEnv)
+			if p.executeForInLoop(ast, forEnv) {
+				return nil // Handle the return statement
 			}
 		}
 	}
 
 	return nil
+}
+
+func (p ForIn) executeForInLoop(ast *environment.AST, env environment.Environment) bool {
+	for _, inst := range p.Bloque {
+		result := inst.(interfaces.Instruction).Ejecutar(ast, env)
+		if sym, isSymbol := result.(environment.Symbol); isSymbol {
+			if sym.ReturnFlag {
+				return true // Handle the return statement
+			} else if sym.BreakFlag {
+				return false // Handle the break statement
+			} else if sym.ContinueFlag {
+				// Handle the continue statement (not implemented here)
+			}
+		}
+	}
+	return false
 }

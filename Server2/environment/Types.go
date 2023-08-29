@@ -7,7 +7,7 @@ const (
 	FLOAT                        //1
 	STRING                       //2
 	BOOLEAN                      //3
-	NULL                         //4
+	NIL                          //4
 	ARRAY                        //5
 	RANGE                        //6
 	STR                          //7

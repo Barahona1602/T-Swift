@@ -35,7 +35,9 @@ func (p If) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 			if instruction, isInstruction := inst.(interfaces.Instruction); isInstruction {
 				result := instruction.Ejecutar(ast, ifEnv)
 				if sym, isSymbol := result.(environment.Symbol); isSymbol {
-					if sym.BreakFlag {
+					if sym.ReturnFlag {
+						return result // Handle the return statement
+					} else if sym.BreakFlag {
 						breakFlag = true
 						break
 					} else if sym.ContinueFlag {
@@ -60,7 +62,9 @@ func (p If) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 				if instruction, isInstruction := inst.(interfaces.Instruction); isInstruction {
 					result := instruction.Ejecutar(ast, elseEnv)
 					if sym, isSymbol := result.(environment.Symbol); isSymbol {
-						if sym.BreakFlag || sym.ContinueFlag {
+						if sym.ReturnFlag {
+							return result // Handle the return statement
+						} else if sym.BreakFlag || sym.ContinueFlag {
 							return nil
 						}
 					}

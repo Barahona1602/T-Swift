@@ -19,21 +19,33 @@ func NewDeclaration(lin int, col int, id string, tipo environment.TipoExpresion,
 }
 
 func (p Declaration) Ejecutar(ast *environment.AST, env interface{}) interface{} {
-	//Traer simbolo
-	var result environment.Symbol
-	result = p.Expresion.Ejecutar(ast, env)
-	//validar tipos
-	if result.Tipo == environment.ARRAY {
-		if p.ArrayValidation(result) {
+	if p.Expresion == nil {
+		// Asignar el valor nil al símbolo en el entorno
+		env.(environment.Environment).SaveVariable(p.Id, environment.Symbol{
+			Lin:   p.Lin,
+			Col:   p.Col,
+			Tipo:  p.Tipo,
+			Valor: nil,
+		})
+	} else {
+		// Traer simbolo
+		var result environment.Symbol
+		result = p.Expresion.Ejecutar(ast, env)
+
+		// Validar tipos
+		if result.Tipo == environment.ARRAY {
+			if p.ArrayValidation(result) {
+				env.(environment.Environment).SaveVariable(p.Id, result)
+			} else {
+				ast.SetError("La estructura del array es incorrecta")
+			}
+		} else if result.Tipo == p.Tipo {
 			env.(environment.Environment).SaveVariable(p.Id, result)
 		} else {
-			ast.SetError("La estructura del array es incorrecta")
+			ast.SetError("Los tipos de datos son incorrectos")
 		}
-	} else if result.Tipo == p.Tipo {
-		env.(environment.Environment).SaveVariable(p.Id, result)
-	} else {
-		ast.SetError("Los tipos de datos son incorrectos")
 	}
+
 	return nil
 }
 

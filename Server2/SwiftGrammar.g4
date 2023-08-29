@@ -67,7 +67,10 @@ whilestmt returns [interfaces.Instruction whl]
 
 declarationstmt returns [interfaces.Instruction dec]
 : VAR ID D_PTS types IG expr  { $dec = instructions.NewDeclaration($VAR.line, $VAR.pos, $ID.text, $types.ty, $expr.e) }
+| VAR ID op=IG types PARIZQ expr PARDER { $dec = instructions.NewCastDeclaration($VAR.line, $VAR.pos, $ID.text, $types.ty, $expr.e) }
+| VAR ID D_PTS types  { $dec = instructions.NewDeclaration($VAR.line, $VAR.pos, $ID.text, $types.ty, nil) }
 | LET ID D_PTS types IG expr  { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expr.e) }
+| LET ID D_PTS types  { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil) }
 ;
 
 assignstmt returns [interfaces.Instruction asg]
@@ -112,10 +115,10 @@ continuestmt returns [interfaces.Instruction cnt]
 : CONTINUE { $cnt = instructions.NewContinue($CONTINUE.line, $CONTINUE.pos) }
 ;
 
-// returnstmt returns [interfaces.Instruction ret]
-// : RETURN expr { $ret = instructions.NewReturn($RETURN.line, $RETURN.pos, $expr.e) }
-// | RETURN { $ret = instructions.NewReturn($RETURN.line, $RETURN.pos, nil) }
-// ;
+returnstmt returns [interfaces.Instruction ret]
+: RETURN expr { $ret = instructions.NewReturn($RETURN.line, $RETURN.pos, $expr.e) }
+| RETURN { $ret = instructions.NewReturn($RETURN.line, $RETURN.pos, nil) }
+;
 
 fnArray returns[interfaces.Instruction p]
 : ID PUNTO APPEND PARIZQ expr PARDER { $p = instructions.NewAppend($ID.line, $ID.pos, $ID.text, $expr.e) }
@@ -130,10 +133,12 @@ types returns[environment.TipoExpresion ty]
 | BOOL { $ty = environment.BOOLEAN }
 | CORIZQ types CORDER { $ty = environment.ARRAY }
 | COMILLA STR COMILLA { $ty = environment.STR }
+| NIL { $ty = environment.NIL }
 ;
 
 expr returns [interfaces.Expression e]
 : SUB opDe=expr {$e = expressions.NewOperation($SUB.line,$SUB.pos,$opDe.e,"NEGACION",nil)}
+| types PARIZQ expr PARDER { $e = expressions.NewCast($types.start.GetLine(), $types.start.GetColumn(), $types.ty, $expr.e) }
 | left=expr op=(SUB_IG|SUM_IG) expr { $e = expressions.NewOperation($op.line, $op.pos, nil, $op.text, $expr.e) }
 | left=expr op=(MUL|DIV|MOD) right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=(ADD|SUB) right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
@@ -142,6 +147,7 @@ expr returns [interfaces.Expression e]
 | left=expr op=(IG_IG|DIF) right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=AND right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=OR right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
+| left=expr op=COMA right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | PARIZQ expr PARDER { $e = $expr.e }
 | CORIZQ CORDER { $e = expressions.NewArray($CORIZQ.line, $CORIZQ.pos, nil) }
 | list=listArray { $e = $list.p}
@@ -171,6 +177,7 @@ expr returns [interfaces.Expression e]
 | FAL { $e = expressions.NewPrimitive($FAL.line, $FAL.pos, false, environment.BOOLEAN) }
 | ID PUNTO COUNT { $e = expressions.NewCount($ID.line, $ID.pos, $ID.text) }
 | ID PUNTO ISEMPTY { $e = expressions.NewIsEmpty($ID.line, $ID.pos, $ID.text) }
+| NIL { $e = expressions.NewPrimitive($NIL.line, $NIL.pos, nil, environment.NIL) }
 ;
 
 

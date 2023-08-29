@@ -44,7 +44,7 @@ func (p ArrayAccess) Ejecutar(ast *environment.AST, env interface{}) environment
 	return environment.Symbol{
 		Lin:   p.Lin,
 		Col:   p.Col,
-		Tipo:  environment.NULL,
+		Tipo:  environment.NIL,
 		Valor: 0,
 	}
 }

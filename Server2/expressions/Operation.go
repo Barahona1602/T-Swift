@@ -24,16 +24,16 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 	var dominante environment.TipoExpresion
 
 	tabla_dominante := [5][5]environment.TipoExpresion{
-		//		INTEGER			FLOAT				STRING				BOOLEAN				NULL
-		{environment.INTEGER, environment.FLOAT, environment.STRING, environment.BOOLEAN, environment.NULL},
+		//		INTEGER			FLOAT				STRING				BOOLEAN				NIL
+		{environment.INTEGER, environment.FLOAT, environment.STRING, environment.BOOLEAN, environment.NIL},
 		//FLOAT
-		{environment.FLOAT, environment.FLOAT, environment.STRING, environment.NULL, environment.NULL},
+		{environment.FLOAT, environment.FLOAT, environment.STRING, environment.NIL, environment.NIL},
 		//STRING
-		{environment.STRING, environment.STRING, environment.STRING, environment.STRING, environment.NULL},
+		{environment.STRING, environment.STRING, environment.STRING, environment.STRING, environment.NIL},
 		//BOOLEAN
-		{environment.BOOLEAN, environment.NULL, environment.STRING, environment.BOOLEAN, environment.NULL},
-		//NULL
-		{environment.NULL, environment.NULL, environment.NULL, environment.NULL, environment.NULL},
+		{environment.BOOLEAN, environment.NIL, environment.STRING, environment.BOOLEAN, environment.NIL},
+		//NIL
+		{environment.NIL, environment.NIL, environment.NIL, environment.NIL, environment.NIL},
 	}
 
 	var op1, op2 environment.Symbol
@@ -262,8 +262,32 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				fmt.Println("ERROR: tipo no compatible -")
 			}
 		}
+	case ",":
+		{
+			// Validar tipo dominante
+			dominante := tabla_dominante[op1.Tipo][op2.Tipo]
+
+			// Convertir a STRING
+			stringify := func(val interface{}) string {
+				return fmt.Sprintf("%v", val)
+			}
+
+			if dominante == environment.INTEGER {
+				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: stringify(op1.Valor.(int)) + " " + stringify(op2.Valor.(int))}
+			} else if dominante == environment.FLOAT {
+				val1, _ := strconv.ParseFloat(stringify(op1.Valor), 64)
+				val2, _ := strconv.ParseFloat(stringify(op2.Valor), 64)
+				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: val1 + val2}
+			} else if dominante == environment.STRING {
+				r1 := stringify(op1.Valor)
+				r2 := stringify(op2.Valor)
+				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: r1 + " " + r2}
+			} else {
+				ast.SetError("ERROR: No es posible sumar")
+			}
+		}
 	}
 
 	var result interface{}
-	return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: environment.NULL, Valor: result}
+	return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: environment.NIL, Valor: result}
 }
