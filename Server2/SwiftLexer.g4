@@ -79,6 +79,7 @@ CORDER:         ']';
 COMA:           ',';
 PUNTO:          '.';
 COMILLA:        '"';
+FLECHA:         '->';
 
 // skip
 WHITESPACE: [ \\\r\n\t]+ -> skip;

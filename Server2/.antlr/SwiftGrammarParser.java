@@ -31,7 +31,7 @@ public class SwiftGrammarParser extends Parser {
 		NOT=41, OR=42, AND=43, IG=44, MAY_IG=45, MEN_IG=46, SUM_IG=47, SUB_IG=48, 
 		MAYOR=49, MENOR=50, MUL=51, DIV=52, ADD=53, SUB=54, MOD=55, PARIZQ=56, 
 		PARDER=57, LLAVEIZQ=58, LLAVEDER=59, D_PTS=60, CORIZQ=61, CORDER=62, COMA=63, 
-		PUNTO=64, COMILLA=65, WHITESPACE=66, COMMENT=67, LINE_COMMENT=68;
+		PUNTO=64, COMILLA=65, FLECHA=66, WHITESPACE=67, COMMENT=68, LINE_COMMENT=69;
 	public static final int
 		RULE_s = 0, RULE_block = 1, RULE_instruction = 2, RULE_printstmt = 3, 
 		RULE_ifstmt = 4, RULE_whilestmt = 5, RULE_declarationstmt = 6, RULE_assignstmt = 7, 
@@ -57,7 +57,7 @@ public class SwiftGrammarParser extends Parser {
 			"'isEmpty'", "'count'", null, null, null, "'!='", "'=='", "'!'", "'||'", 
 			"'&&'", "'='", "'>='", "'<='", "'+='", "'-='", "'>'", "'<'", "'*'", "'/'", 
 			"'+'", "'-'", "'%'", "'('", "')'", "'{'", "'}'", "':'", "'['", "']'", 
-			"','", "'.'", "'\"'"
+			"','", "'.'", "'\"'", "'->'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
@@ -70,7 +70,7 @@ public class SwiftGrammarParser extends Parser {
 			"ISEMPTY", "COUNT", "NUMBER", "STRING", "ID", "DIF", "IG_IG", "NOT", 
 			"OR", "AND", "IG", "MAY_IG", "MEN_IG", "SUM_IG", "SUB_IG", "MAYOR", "MENOR", 
 			"MUL", "DIV", "ADD", "SUB", "MOD", "PARIZQ", "PARDER", "LLAVEIZQ", "LLAVEDER", 
-			"D_PTS", "CORIZQ", "CORDER", "COMA", "PUNTO", "COMILLA", "WHITESPACE", 
+			"D_PTS", "CORIZQ", "CORDER", "COMA", "PUNTO", "COMILLA", "FLECHA", "WHITESPACE", 
 			"COMMENT", "LINE_COMMENT"
 		};
 	}
@@ -1927,7 +1927,7 @@ public class SwiftGrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3F\u018b\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3G\u018b\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\3\2\3\2\3\2\3\2\3\3\6\3,\n\3\r\3\16\3-\3\3\3\3\3\4\3\4\3\4"+

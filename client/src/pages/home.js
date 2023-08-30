@@ -1,36 +1,101 @@
-import React from 'react';
-import { useState } from 'react';
-import { InputTextarea } from 'primereact/inputtextarea';
+import React, { useState, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { PostMethod } from '../api/http';
+import MonacoEditor from 'react-monaco-editor';
 
-const visitorAPI = process.env.REACT_APP_API_URL_VISITOR;
 const interpreterAPI = process.env.REACT_APP_API_URL_INTERPRETER;
 
 const Home = () => {
+    const [codeText, setCodeText] = useState('');
+    const [consoleText, setConsoleText] = useState('');
+    const uploadInputRef = useRef(null);
 
-    const [codeText, setCodeText] = useState('')
-    const [consoleText, setConsoleText] = useState('')
+    const CompileInterpreter = async () => {
+        const resp = await PostMethod(interpreterAPI + 'Interpreter', { Content: codeText });
+        await setConsoleText(resp?.Output);
+    };
 
-    const CompileVisitor = async() => {
-        const resp = await PostMethod(visitorAPI+'Visitor', { Content: codeText })
-        await setConsoleText(resp?.Output)
-    }
+    const handleFileUpload = () => {
+        uploadInputRef.current.click();
+    };
 
-    const CompileInterpreter = async() => {
-        const resp = await PostMethod(interpreterAPI+'Interpreter', { Content: codeText })
-        await setConsoleText(resp?.Output)
-    }
+    const handleFileInputChange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            setCodeText(event.target.result);
+        };
+
+        if (file) {
+            reader.readAsText(file);
+        }
+    };
 
     return (
-        <div>
-            <div style={{display: 'flex'}}>
-                <InputTextarea value={codeText} rows={8} cols={40} style={{marginBottom: '5%', marginRight: '2%'}} onChange={e => {setCodeText(e.target.value)}}/>
-                <InputTextarea value={consoleText} rows={8} cols={40} style={{marginBottom: '5%', marginLeft: '2%'}} onChange={e => {setConsoleText(e.target.value)}}/>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <h1>T-Swift</h1>
+            
+            <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', width: '100%', marginLeft: '0%' }}>
+                <Button label="UPLOAD" className="p-button-success" style={{ marginRight: '1%' }} onClick={handleFileUpload} />
+                <input ref={uploadInputRef} type="file" accept=".swift" onChange={handleFileInputChange} style={{ display: 'none' }} />
             </div>
-            <div style={{display: 'flex'}}>
-                <Button label="RUN VISITOR" onClick={CompileVisitor} style={{marginRight: '2%'}} />
-                <Button label="RUN INTERPRETER" onClick={CompileInterpreter} style={{marginLeft: '2%'}}/>
+            <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', width: '100%', paddingTop: '1%' }}>
+                <div style={{ width: '40%', height: '60%', marginRight: '10%' }}>
+                    <label>Input Code</label>
+                    <MonacoEditor
+                        height={'600px'}
+                        width={'800px'}
+                        language="swift"
+                        theme="vs-dark"
+                        value={codeText}
+                        onChange={setCodeText}
+                        options={{
+                            fontFamily: "'Fira Code', monospace",
+                            fontSize: 14,
+                            wordWrap: "on",
+                            colorDecorators: true,
+                            lineNumbers: "on",
+                            automaticLayout: true,
+                            renderLineHighlight: "all",
+                            selectionHighlight: true,
+                            minimap: {
+                                enabled: true
+                            },
+                            scrollbar: {
+                                verticalScrollbarSize: 10,
+                                horizontalScrollbarSize: 10
+                            },
+                            tokenColorCustomizations: {
+                                variables: "#FF5733",
+                                functions: "#00BFFF",
+                                keywords: "#FFD700"
+                            }
+                        }}
+                    />
+
+                </div>
+        
+                <div style={{ width: '40%', height: '60%', marginLeft: '10%' }}>
+                    <label>Console Output</label>
+                    <MonacoEditor
+                        height={'600px'}
+                        width={'600px'}
+                        language="swift"
+                        theme="vs-dark"
+                        value={consoleText}
+                        options={{ readOnly: true, scrollBeyondLastLine: false }}
+
+                    />
+                </div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', width: '100%', marginLeft: '0%', paddingTop: '1%' }}>
+                <Button label="RUN >>>" className="p-button-success" onClick={CompileInterpreter} style={{ marginBottom: '1%' }} />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+                <Button label="CST" className="p-button-success" style={{ marginRight: '1%' }} />
+                <Button label="ERRORES" className="p-button-success" style={{ marginRight: '1%' }} />
+                <Button label="TABLA DE SIMBOLOS" className="p-button-success" />
             </div>
         </div>
     );

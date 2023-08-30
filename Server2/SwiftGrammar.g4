@@ -126,6 +126,11 @@ fnArray returns[interfaces.Instruction p]
 | ID PUNTO REMOVELAST PARIZQ PARDER { $p = instructions.NewRemoveLast($ID.line, $ID.pos, $ID.text) }
 ;
 
+// fnstmt returns[interfaces.Instruction fn]
+// : FUNC ID PARIZQ listParams PARDER FLECHA types LLAVEIZQ block LLAVEDER { $fn = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParams.l, $types.ty, $block.blk) }
+// | FUNC ID PARIZQ listParams PARDER LLAVEIZQ block LLAVEDER { $fn = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParams.l, nil, $block.blk) }
+// ; 
+
 types returns[environment.TipoExpresion ty]
 : INT { $ty = environment.INTEGER }
 | FLOAT { $ty = environment.FLOAT }
@@ -178,6 +183,7 @@ expr returns [interfaces.Expression e]
 | ID PUNTO COUNT { $e = expressions.NewCount($ID.line, $ID.pos, $ID.text) }
 | ID PUNTO ISEMPTY { $e = expressions.NewIsEmpty($ID.line, $ID.pos, $ID.text) }
 | NIL { $e = expressions.NewPrimitive($NIL.line, $NIL.pos, nil, environment.NIL) }
+
 ;
 
 
