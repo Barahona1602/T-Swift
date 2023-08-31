@@ -35,7 +35,7 @@ func (s Switch) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 
 	// Verificar si hay un valor nulo en la expresión
 	if switchExp.Valor == nil {
-		ast.SetError("La expresión en el switch tiene un valor nulo")
+		ast.SetError("La expresión en el switch tiene un valor nulo", s.Lin, s.Col)
 		return nil
 	}
 

@@ -35,7 +35,7 @@ func (ia ImplicitAssignment) Ejecutar(ast *environment.AST, env interface{}) int
 	case "-=":
 		result = performSubtraction(currentValue, rightValue)
 	default:
-		ast.SetError("ERROR: Invalid implicit assignment operator")
+		ast.SetError("ERROR: Invalid implicit assignment operator", ia.Lin, ia.Col)
 		return nil
 	}
 

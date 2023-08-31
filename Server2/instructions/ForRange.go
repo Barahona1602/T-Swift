@@ -41,7 +41,7 @@ func (p ForIn) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 	} else { // Si no es una cadena, asumir que es un rango numérico
 		rangeExp := p.Expresion2.Ejecutar(ast, env)
 		if rangeExp.Tipo != environment.INTEGER {
-			ast.SetError("La expresión en el for...in debe ser un entero")
+			ast.SetError("La expresión en el for...in debe ser un entero", p.Lin, p.Col)
 			return nil
 		}
 

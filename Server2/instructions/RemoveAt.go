@@ -20,19 +20,19 @@ func (p RemoveAt) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 	listSymbol := env.(environment.Environment).GetVariable(p.ListID)
 	listValue, isList := listSymbol.Valor.([]interface{})
 	if !isList {
-		ast.SetError("'" + p.ListID + "' no es una lista")
+		ast.SetError("'"+p.ListID+"' no es una lista", p.Lin, p.Col)
 		return nil
 	}
 
 	positionValue := p.Position.Ejecutar(ast, env)
 	if positionValue.Tipo != environment.INTEGER {
-		ast.SetError("La posición debe ser un valor entero")
+		ast.SetError("La posición debe ser un valor entero", p.Lin, p.Col)
 		return nil
 	}
 
 	positionIndex := positionValue.Valor.(int)
 	if positionIndex < 0 || positionIndex >= len(listValue) {
-		ast.SetError("La posición está fuera de los límites de la lista")
+		ast.SetError("La posición está fuera de los límites de la lista", p.Lin, p.Col)
 		return nil
 	}
 

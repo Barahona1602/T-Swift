@@ -20,7 +20,7 @@ func (p Append) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 	listSymbol := env.(environment.Environment).GetVariable(p.ListID)
 	listValue, isList := listSymbol.Valor.([]interface{})
 	if !isList {
-		ast.SetError("'" + p.ListID + "' no es una lista")
+		ast.SetError("'"+p.ListID+"' no es una lista", p.Lin, p.Col)
 		return nil
 	}
 

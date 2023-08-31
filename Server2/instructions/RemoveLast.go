@@ -18,13 +18,13 @@ func (p RemoveLast) Ejecutar(ast *environment.AST, env interface{}) interface{} 
 	listSymbol := env.(environment.Environment).GetVariable(p.ListID)
 	listValue, isList := listSymbol.Valor.([]interface{})
 	if !isList {
-		ast.SetError("'" + p.ListID + "' no es una lista")
+		ast.SetError("'"+p.ListID+"' no es una lista", p.Lin, p.Col)
 		return nil
 	}
 
 	// Verificar si la lista está vacía antes de eliminar el último elemento
 	if len(listValue) == 0 {
-		ast.SetError("La lista '" + p.ListID + "' está vacía, no se puede eliminar el último elemento")
+		ast.SetError("La lista '"+p.ListID+"' está vacía, no se puede eliminar el último elemento", p.Lin, p.Col)
 		return nil
 	}
 

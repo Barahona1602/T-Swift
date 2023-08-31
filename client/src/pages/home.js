@@ -9,6 +9,8 @@ const Home = () => {
     const [codeText, setCodeText] = useState('');
     const [consoleText, setConsoleText] = useState('');
     const [html, setHtml] = useState('');
+    const [htmlErr, setHtmlErr] = useState('');
+    const [showHtmlErr, setShowHtmlErr] = useState(false);
     const [showHtml, setShowHtml] = useState(false);
     const uploadInputRef = useRef(null);
 
@@ -16,6 +18,8 @@ const Home = () => {
         const resp = await PostMethod(interpreterAPI + 'Interpreter', { Content: codeText });
         const newHtml = resp?.Tabla;
         await setHtml(newHtml);
+        const newHtmlErr = resp?.TablaErr;
+        await setHtmlErr(newHtmlErr);
         await setConsoleText(resp?.Output);
     };
 
@@ -39,7 +43,14 @@ const Home = () => {
 
     const toggleHtmlDisplay = () => {
         setShowHtml(!showHtml);
+        setShowHtmlErr(false); // Desactivar la visibilidad de la tabla de errores
     };
+    
+    const toggleHtmlErrDisplay = () => {
+        setShowHtmlErr(!showHtmlErr);
+        setShowHtml(false); // Desactivar la visibilidad de la tabla de símbolos
+    };
+    
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -103,11 +114,12 @@ const Home = () => {
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                 <Button label="CST" className="p-button-success" style={{ marginRight: '1%' }} />
-                <Button label="ERRORES" className="p-button-success" style={{ marginRight: '1%' }} />
+                <Button label="ERRORES" className="p-button-success" onClick={toggleHtmlErrDisplay} style={{ marginRight: '1%' }} />
                 <Button label="TABLA DE SIMBOLOS" className="p-button-success" onClick={toggleHtmlDisplay} />
             </div>
             {/* Insertar el contenido HTML debajo de los botones solo si showHtml es true */}
             {showHtml && <div dangerouslySetInnerHTML={{ __html: html }} />}
+            {showHtmlErr && <div dangerouslySetInnerHTML={{ __html: htmlErr }} />}
         </div>
     );
 };

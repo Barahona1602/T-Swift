@@ -22,7 +22,7 @@ func (p While) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 		condicion := p.Expresion.Ejecutar(ast, env)
 
 		if condicion.Tipo != environment.BOOLEAN {
-			ast.SetError("El tipo de variable es incorrecto para un While")
+			ast.SetError("El tipo de variable es incorrecto para un While", p.Lin, p.Col)
 			return nil
 		}
 

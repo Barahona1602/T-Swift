@@ -48,7 +48,7 @@ func (p For) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 		}
 
 	default:
-		ast.SetError("La expresión en el for debe ser una cadena o un vector")
+		ast.SetError("La expresión en el for debe ser una cadena o un vector", p.Lin, p.Col)
 	}
 
 	return nil
@@ -81,7 +81,7 @@ func (p For) executeArrayForLoop(ast *environment.AST, env interface{}, arrayVal
 				return true // Handle the return statement
 			}
 		default:
-			ast.SetError("Elemento no válido en la lista")
+			ast.SetError("Elemento no válido en la lista", p.Lin, p.Col)
 			return false
 		}
 

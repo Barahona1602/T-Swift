@@ -33,13 +33,13 @@ func (p ArrayAccess) Ejecutar(ast *environment.AST, env interface{}) environment
 			valret := tempValue.([]interface{})[(tempIndex.Valor.(int))].(environment.Symbol)
 			return valret
 		} else {
-			ast.SetError("Indice fuera de los limites")
+			ast.SetError("Indice fuera de los limites", p.Lin, p.Col)
 			fmt.Println("indice: ", tempIndex.Valor.(int))
 			fmt.Println("tamaño: ", len(tempValue.([]interface{})))
 		}
 
 	} else {
-		ast.SetError("La expresión no es un arreglo")
+		ast.SetError("La expresión no es un arreglo", p.Lin, p.Col)
 	}
 	return environment.Symbol{
 		Lin:   p.Lin,

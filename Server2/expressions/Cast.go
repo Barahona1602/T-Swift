@@ -30,12 +30,12 @@ func (p Cast) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol
 		case environment.STRING:
 			val, err := strconv.ParseFloat(tmpExp.Valor.(string), 64)
 			if err != nil {
-				ast.SetError("No se puede castear a Float")
+				ast.SetError("No se puede castear a Float", p.Lin, p.Col)
 			}
 			valWithZeros := fmt.Sprintf("%.4f", val) // Agregar cuatro ceros decimales
 			return environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: p.Tipo, Valor: valWithZeros}
 		default:
-			ast.SetError("No se pueden castear los tipos indicados")
+			ast.SetError("No se pueden castear los tipos indicados", p.Lin, p.Col)
 		}
 	} else if p.Tipo == environment.STRING { // Casting a String
 		switch tmpExp.Tipo {
@@ -45,7 +45,7 @@ func (p Cast) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol
 			val := fmt.Sprintf("%.4f", tmpExp.Valor.(float64)) // Agregar cuatro ceros decimales
 			return environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: p.Tipo, Valor: val}
 		default:
-			ast.SetError("No se pueden castear los tipos indicados")
+			ast.SetError("No se pueden castear los tipos indicados", p.Lin, p.Col)
 		}
 	} else if p.Tipo == environment.INTEGER { // Casting a Integer
 		switch tmpExp.Tipo {
@@ -57,14 +57,14 @@ func (p Cast) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol
 		case environment.STRING:
 			val, err := strconv.ParseFloat(tmpExp.Valor.(string), 64)
 			if err != nil {
-				ast.SetError("No se puede castear a Integer")
+				ast.SetError("No se puede castear a Integer", p.Lin, p.Col)
 			}
 			return environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: p.Tipo, Valor: int(val)}
 		default:
-			ast.SetError("No se pueden castear los tipos indicados")
+			ast.SetError("No se pueden castear los tipos indicados", p.Lin, p.Col)
 		}
 	}
 
-	ast.SetError("No se pueden castear los tipos indicados")
+	ast.SetError("No se pueden castear los tipos indicados", p.Lin, p.Col)
 	return environment.Symbol{}
 }

@@ -37,7 +37,8 @@ func (p CastDeclaration) Ejecutar(ast *environment.AST, env interface{}) interfa
 		if castedValue.Tipo == p.Tipo {
 			env.(environment.Environment).SaveVariable(p.Id, castedValue)
 		} else {
-			ast.SetError("Los tipos de datos son incorrectos")
+			ast.SetError("Los tipos de datos son incorrectos", p.Lin, p.Col)
+
 		}
 	}
 
@@ -55,12 +56,12 @@ func performImplicitCast(value environment.Symbol, targetType environment.TipoEx
 		case environment.STRING:
 			val, err := strconv.ParseFloat(value.Valor.(string), 64)
 			if err != nil {
-				ast.SetError("No se puede castear a Float")
+				ast.SetError("No se puede castear a Float", value.Lin, value.Col)
 			}
 			valWithZeros := fmt.Sprintf("%.4f", val)
 			return environment.Symbol{Lin: value.Lin, Col: value.Col, Tipo: targetType, Valor: valWithZeros}
 		default:
-			ast.SetError("No se pueden castear los tipos indicados")
+			ast.SetError("No se pueden castear los tipos indicados", value.Lin, value.Col)
 		}
 	case environment.STRING:
 		switch value.Tipo {
@@ -70,7 +71,7 @@ func performImplicitCast(value environment.Symbol, targetType environment.TipoEx
 			val := fmt.Sprintf("%.4f", value.Valor.(float64))
 			return environment.Symbol{Lin: value.Lin, Col: value.Col, Tipo: targetType, Valor: val}
 		default:
-			ast.SetError("No se pueden castear los tipos indicados")
+			ast.SetError("No se pueden castear los tipos indicados", value.Lin, value.Col)
 		}
 	case environment.INTEGER:
 		switch value.Tipo {
@@ -82,14 +83,14 @@ func performImplicitCast(value environment.Symbol, targetType environment.TipoEx
 		case environment.STRING:
 			val, err := strconv.ParseFloat(value.Valor.(string), 64)
 			if err != nil {
-				ast.SetError("No se puede castear a Integer")
+				ast.SetError("No se puede castear a Integer", value.Lin, value.Col)
 			}
 			return environment.Symbol{Lin: value.Lin, Col: value.Col, Tipo: targetType, Valor: int(val)}
 		default:
-			ast.SetError("No se pueden castear los tipos indicados")
+			ast.SetError("No se pueden castear los tipos indicados", value.Lin, value.Col)
 		}
 	}
 
-	ast.SetError("No se pueden castear los tipos indicados")
+	ast.SetError("No se pueden castear los tipos indicados", value.Lin, value.Col)
 	return environment.Symbol{}
 }

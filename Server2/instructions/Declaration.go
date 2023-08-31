@@ -37,12 +37,12 @@ func (p Declaration) Ejecutar(ast *environment.AST, env interface{}) interface{}
 			if p.ArrayValidation(result) {
 				env.(environment.Environment).SaveVariable(p.Id, result)
 			} else {
-				ast.SetError("La estructura del array es incorrecta")
+				ast.SetError("La estructura del array es incorrecta", p.Lin, p.Col)
 			}
 		} else if result.Tipo == p.Tipo {
 			env.(environment.Environment).SaveVariable(p.Id, result)
 		} else {
-			ast.SetError("Los tipos de datos son incorrectos")
+			ast.SetError("Los tipos de datos son incorrectos", p.Lin, p.Col)
 		}
 	}
 	return nil

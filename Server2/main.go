@@ -17,10 +17,11 @@ type TreeShapeListener struct {
 }
 
 type Resp struct {
-	Output  string
-	Flag    bool
-	Message string
-	Tabla   string
+	Output   string
+	Flag     bool
+	Message  string
+	Tabla    string
+	TablaErr string
 }
 
 type Message struct {
@@ -66,11 +67,16 @@ func handleInterpreter(c *fiber.Ctx) error {
 	if err != nil {
 		fmt.Println("Error al imprimir tabla de variables")
 	}
+	tableErr, err := Ast.PrintErrorsToFile()
+	if err != nil {
+		fmt.Println(tableErr)
+	}
 	response := Resp{
-		Output:  ConsoleOut,
-		Flag:    true,
-		Message: "<3 Ejecución realizada con éxito <3",
-		Tabla:   tableHTML,
+		Output:   ConsoleOut,
+		Flag:     true,
+		Message:  "<3 Ejecución realizada con éxito <3",
+		Tabla:    tableHTML,
+		TablaErr: tableErr,
 	}
 	return c.Status(fiber.StatusOK).JSON(response)
 }
