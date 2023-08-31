@@ -43,6 +43,9 @@ type SwiftGrammarListener interface {
 	// EnterContinuestmt is called when entering the continuestmt production.
 	EnterContinuestmt(c *ContinuestmtContext)
 
+	// EnterReturnstmt is called when entering the returnstmt production.
+	EnterReturnstmt(c *ReturnstmtContext)
+
 	// EnterFnArray is called when entering the fnArray production.
 	EnterFnArray(c *FnArrayContext)
 
@@ -57,6 +60,9 @@ type SwiftGrammarListener interface {
 
 	// EnterListArray is called when entering the listArray production.
 	EnterListArray(c *ListArrayContext)
+
+	// EnterExprComa is called when entering the exprComa production.
+	EnterExprComa(c *ExprComaContext)
 
 	// ExitS is called when exiting the s production.
 	ExitS(c *SContext)
@@ -94,6 +100,9 @@ type SwiftGrammarListener interface {
 	// ExitContinuestmt is called when exiting the continuestmt production.
 	ExitContinuestmt(c *ContinuestmtContext)
 
+	// ExitReturnstmt is called when exiting the returnstmt production.
+	ExitReturnstmt(c *ReturnstmtContext)
+
 	// ExitFnArray is called when exiting the fnArray production.
 	ExitFnArray(c *FnArrayContext)
 
@@ -108,4 +117,7 @@ type SwiftGrammarListener interface {
 
 	// ExitListArray is called when exiting the listArray production.
 	ExitListArray(c *ListArrayContext)
+
+	// ExitExprComa is called when exiting the exprComa production.
+	ExitExprComa(c *ExprComaContext)
 }

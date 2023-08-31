@@ -53,6 +53,7 @@ instruction returns [interfaces.Instruction inst]
 
 printstmt returns [interfaces.Instruction prnt]
 : PRINT PARIZQ expr PARDER { $prnt = instructions.NewPrint($PRINT.line,$PRINT.pos,$expr.e)}
+| PRINT PARIZQ exprComa PARDER { $prnt = instructions.NewPrint($PRINT.line,$PRINT.pos,$exprComa.t)}
 ;
 
 ifstmt returns [interfaces.Instruction ifinst]
@@ -152,7 +153,6 @@ expr returns [interfaces.Expression e]
 | left=expr op=(IG_IG|DIF) right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=AND right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=OR right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
-| left=expr op=COMA right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | PARIZQ expr PARDER { $e = $expr.e }
 | CORIZQ CORDER { $e = expressions.NewArray($CORIZQ.line, $CORIZQ.pos, nil) }
 | list=listArray { $e = $list.p}
@@ -183,7 +183,6 @@ expr returns [interfaces.Expression e]
 | ID PUNTO COUNT { $e = expressions.NewCount($ID.line, $ID.pos, $ID.text) }
 | ID PUNTO ISEMPTY { $e = expressions.NewIsEmpty($ID.line, $ID.pos, $ID.text) }
 | NIL { $e = expressions.NewPrimitive($NIL.line, $NIL.pos, nil, environment.NIL) }
-
 ;
 
 
@@ -200,7 +199,10 @@ listParams returns[[]interface{} l]
 ;
 
 listArray returns[interfaces.Expression p]
-: list = listArray types CORIZQ expr CORDER { $p = expressions.NewArrayAccess($list.start.GetLine(), $list.start.GetColumn(), $list.p, $expr.e) }
+: list = listArray types IG CORIZQ expr CORDER { $p = expressions.NewArrayAccess($list.start.GetLine(), $list.start.GetColumn(), $list.p, $expr.e) }
 | ID { $p = expressions.NewCallVar($ID.line, $ID.pos, $ID.text)}
 ;
 
+exprComa returns[interfaces.Expression t]
+: left=expr op=COMA right=expr { $t = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
+;

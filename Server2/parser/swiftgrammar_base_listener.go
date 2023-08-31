@@ -92,6 +92,12 @@ func (s *BaseSwiftGrammarListener) EnterContinuestmt(ctx *ContinuestmtContext) {
 // ExitContinuestmt is called when production continuestmt is exited.
 func (s *BaseSwiftGrammarListener) ExitContinuestmt(ctx *ContinuestmtContext) {}
 
+// EnterReturnstmt is called when production returnstmt is entered.
+func (s *BaseSwiftGrammarListener) EnterReturnstmt(ctx *ReturnstmtContext) {}
+
+// ExitReturnstmt is called when production returnstmt is exited.
+func (s *BaseSwiftGrammarListener) ExitReturnstmt(ctx *ReturnstmtContext) {}
+
 // EnterFnArray is called when production fnArray is entered.
 func (s *BaseSwiftGrammarListener) EnterFnArray(ctx *FnArrayContext) {}
 
@@ -121,3 +127,9 @@ func (s *BaseSwiftGrammarListener) EnterListArray(ctx *ListArrayContext) {}
 
 // ExitListArray is called when production listArray is exited.
 func (s *BaseSwiftGrammarListener) ExitListArray(ctx *ListArrayContext) {}
+
+// EnterExprComa is called when production exprComa is entered.
+func (s *BaseSwiftGrammarListener) EnterExprComa(ctx *ExprComaContext) {}
+
+// ExitExprComa is called when production exprComa is exited.
+func (s *BaseSwiftGrammarListener) ExitExprComa(ctx *ExprComaContext) {}

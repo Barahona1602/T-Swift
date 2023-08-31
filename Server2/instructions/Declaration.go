@@ -45,7 +45,6 @@ func (p Declaration) Ejecutar(ast *environment.AST, env interface{}) interface{}
 			ast.SetError("Los tipos de datos son incorrectos")
 		}
 	}
-
 	return nil
 }
 

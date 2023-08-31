@@ -4,6 +4,7 @@ import (
 	"Server2/environment"
 	"Server2/interfaces"
 	"Server2/parser"
+	"fmt"
 
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/gofiber/fiber/v2"
@@ -19,6 +20,7 @@ type Resp struct {
 	Output  string
 	Flag    bool
 	Message string
+	Tabla   string
 }
 
 type Message struct {
@@ -26,6 +28,7 @@ type Message struct {
 }
 
 func handleInterpreter(c *fiber.Ctx) error {
+
 	var message Message
 	if err := c.BodyParser(&message); err != nil {
 		return err
@@ -48,6 +51,7 @@ func handleInterpreter(c *fiber.Ctx) error {
 	var Ast environment.AST
 	//create env
 	var globalEnv environment.Environment = environment.NewEnvironment(nil, "GLOBAL")
+
 	//ejecución
 	for _, inst := range Code {
 		inst.(interfaces.Instruction).Ejecutar(&Ast, globalEnv)
@@ -58,10 +62,15 @@ func handleInterpreter(c *fiber.Ctx) error {
 	} else {
 		ConsoleOut = Ast.GetErrors()
 	}
+	tableHTML, err := globalEnv.PrintVariablesToFile()
+	if err != nil {
+		fmt.Println("Error al imprimir tabla de variables")
+	}
 	response := Resp{
 		Output:  ConsoleOut,
 		Flag:    true,
 		Message: "<3 Ejecución realizada con éxito <3",
+		Tabla:   tableHTML,
 	}
 	return c.Status(fiber.StatusOK).JSON(response)
 }

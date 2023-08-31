@@ -8,10 +8,14 @@ const interpreterAPI = process.env.REACT_APP_API_URL_INTERPRETER;
 const Home = () => {
     const [codeText, setCodeText] = useState('');
     const [consoleText, setConsoleText] = useState('');
+    const [html, setHtml] = useState('');
+    const [showHtml, setShowHtml] = useState(false);
     const uploadInputRef = useRef(null);
 
     const CompileInterpreter = async () => {
         const resp = await PostMethod(interpreterAPI + 'Interpreter', { Content: codeText });
+        const newHtml = resp?.Tabla;
+        await setHtml(newHtml);
         await setConsoleText(resp?.Output);
     };
 
@@ -30,6 +34,11 @@ const Home = () => {
         if (file) {
             reader.readAsText(file);
         }
+    };
+
+
+    const toggleHtmlDisplay = () => {
+        setShowHtml(!showHtml);
     };
 
     return (
@@ -95,8 +104,10 @@ const Home = () => {
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                 <Button label="CST" className="p-button-success" style={{ marginRight: '1%' }} />
                 <Button label="ERRORES" className="p-button-success" style={{ marginRight: '1%' }} />
-                <Button label="TABLA DE SIMBOLOS" className="p-button-success" />
+                <Button label="TABLA DE SIMBOLOS" className="p-button-success" onClick={toggleHtmlDisplay} />
             </div>
+            {/* Insertar el contenido HTML debajo de los botones solo si showHtml es true */}
+            {showHtml && <div dangerouslySetInnerHTML={{ __html: html }} />}
         </div>
     );
 };
