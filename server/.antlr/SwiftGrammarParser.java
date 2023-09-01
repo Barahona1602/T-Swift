@@ -1,4 +1,4 @@
-// Generated from c:\Users\pbara\OneDrive\Escritorio\T-Swift\Server2\SwiftGrammar.g4 by ANTLR 4.9.2
+// Generated from c:\Users\pbara\OneDrive\Escritorio\T-Swift\server\SwiftGrammar.g4 by ANTLR 4.9.2
 
     import "Server2/interfaces"
     import "Server2/environment"
