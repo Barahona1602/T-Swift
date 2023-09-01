@@ -67,11 +67,11 @@ whilestmt returns [interfaces.Instruction whl]
 ;
 
 declarationstmt returns [interfaces.Instruction dec]
-: VAR ID D_PTS types IG expr  { $dec = instructions.NewDeclaration($VAR.line, $VAR.pos, $ID.text, $types.ty, $expr.e) }
-| VAR ID op=IG types PARIZQ expr PARDER { $dec = instructions.NewCastDeclaration($VAR.line, $VAR.pos, $ID.text, $types.ty, $expr.e) }
-| VAR ID D_PTS types  { $dec = instructions.NewDeclaration($VAR.line, $VAR.pos, $ID.text, $types.ty, nil) }
-| LET ID D_PTS types IG expr  { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expr.e) }
-| LET ID D_PTS types  { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil) }
+: VAR ID D_PTS types IG expr  { $dec = instructions.NewDeclaration($VAR.line, $VAR.pos, $ID.text, $types.ty, $expr.e, true) }
+| VAR ID op=IG types PARIZQ expr PARDER { $dec = instructions.NewCastDeclaration($VAR.line, $VAR.pos, $ID.text, $types.ty, $expr.e, true) }
+| VAR ID D_PTS types  { $dec = instructions.NewDeclaration($VAR.line, $VAR.pos, $ID.text, $types.ty, nil, true) }
+| LET ID D_PTS types IG expr  { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expr.e, false) }
+| LET ID D_PTS types  { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, false) }
 ;
 
 assignstmt returns [interfaces.Instruction asg]

@@ -2506,7 +2506,7 @@ func (p *SwiftGrammarParser) Declarationstmt() (localctx IDeclarationstmtContext
 			} else {
 				return localctx.(*DeclarationstmtContext).Get_ID().GetText()
 			}
-		}()), localctx.(*DeclarationstmtContext).Get_types().GetTy(), localctx.(*DeclarationstmtContext).Get_expr().GetE())
+		}()), localctx.(*DeclarationstmtContext).Get_types().GetTy(), localctx.(*DeclarationstmtContext).Get_expr().GetE(), true)
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
@@ -2591,7 +2591,7 @@ func (p *SwiftGrammarParser) Declarationstmt() (localctx IDeclarationstmtContext
 			} else {
 				return localctx.(*DeclarationstmtContext).Get_ID().GetText()
 			}
-		}()), localctx.(*DeclarationstmtContext).Get_types().GetTy(), localctx.(*DeclarationstmtContext).Get_expr().GetE())
+		}()), localctx.(*DeclarationstmtContext).Get_types().GetTy(), localctx.(*DeclarationstmtContext).Get_expr().GetE(), true)
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
@@ -2650,7 +2650,7 @@ func (p *SwiftGrammarParser) Declarationstmt() (localctx IDeclarationstmtContext
 			} else {
 				return localctx.(*DeclarationstmtContext).Get_ID().GetText()
 			}
-		}()), localctx.(*DeclarationstmtContext).Get_types().GetTy(), nil)
+		}()), localctx.(*DeclarationstmtContext).Get_types().GetTy(), nil, true)
 
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
@@ -2724,7 +2724,7 @@ func (p *SwiftGrammarParser) Declarationstmt() (localctx IDeclarationstmtContext
 			} else {
 				return localctx.(*DeclarationstmtContext).Get_ID().GetText()
 			}
-		}()), localctx.(*DeclarationstmtContext).Get_types().GetTy(), localctx.(*DeclarationstmtContext).Get_expr().GetE())
+		}()), localctx.(*DeclarationstmtContext).Get_types().GetTy(), localctx.(*DeclarationstmtContext).Get_expr().GetE(), false)
 
 	case 5:
 		p.EnterOuterAlt(localctx, 5)
@@ -2783,7 +2783,7 @@ func (p *SwiftGrammarParser) Declarationstmt() (localctx IDeclarationstmtContext
 			} else {
 				return localctx.(*DeclarationstmtContext).Get_ID().GetText()
 			}
-		}()), localctx.(*DeclarationstmtContext).Get_types().GetTy(), nil)
+		}()), localctx.(*DeclarationstmtContext).Get_types().GetTy(), nil, false)
 
 	case antlr.ATNInvalidAltNumber:
 		goto errorExit

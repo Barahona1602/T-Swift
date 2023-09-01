@@ -60,7 +60,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				r2 := fmt.Sprintf("%v", op2.Valor)
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: r1 + r2}
 			} else {
-				ast.SetError("ERROR: No es posible sumar", o.Lin, o.Col)
+				ast.SetError(" No es posible sumar", o.Lin, o.Col)
 			}
 		}
 	case "-":
@@ -74,7 +74,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				val2, _ := strconv.ParseFloat(fmt.Sprintf("%v", op2.Valor), 64)
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: val1 - val2}
 			} else {
-				ast.SetError("ERROR: No es posible restar", o.Lin, o.Col)
+				ast.SetError(" No es posible restar", o.Lin, o.Col)
 			}
 		}
 	case "*":
@@ -87,7 +87,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				val2, _ := strconv.ParseFloat(fmt.Sprintf("%v", op2.Valor), 64)
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: val1 * val2}
 			} else {
-				ast.SetError("ERROR: No es posible Multiplicar", o.Lin, o.Col)
+				ast.SetError(" No es posible Multiplicar", o.Lin, o.Col)
 			}
 		}
 	case "/":
@@ -97,7 +97,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				if op2.Valor.(int) != 0 {
 					return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: op1.Valor.(int) / op2.Valor.(int)}
 				} else {
-					ast.SetError("ERROR: No es posible dividir en cero", o.Lin, o.Col)
+					ast.SetError(" No es posible dividir en cero", o.Lin, o.Col)
 				}
 
 			} else if dominante == environment.FLOAT {
@@ -106,10 +106,10 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				if val2 != 0 {
 					return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: val1 / val2}
 				} else {
-					ast.SetError("ERROR: No es posible dividir en cero", o.Lin, o.Col)
+					ast.SetError(" No es posible dividir en cero", o.Lin, o.Col)
 				}
 			} else {
-				ast.SetError("ERROR: No es posible Dividir", o.Lin, o.Col)
+				ast.SetError(" No es posible Dividir", o.Lin, o.Col)
 			}
 
 		}
@@ -121,10 +121,10 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 					newValue := op1.Valor.(int) % op2.Valor.(int)
 					return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: newValue}
 				} else {
-					ast.SetError("ERROR: No es posible realizar el módulo (%) con divisor cero", o.Lin, o.Col)
+					ast.SetError(" No es posible realizar el módulo (%) con divisor cero", o.Lin, o.Col)
 				}
 			} else {
-				ast.SetError("ERROR: No es posible realizar el módulo (%) con tipos no compatibles", o.Lin, o.Col)
+				ast.SetError(" No es posible realizar el módulo (%) con tipos no compatibles", o.Lin, o.Col)
 			}
 		}
 	case "<":
@@ -137,7 +137,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				val2, _ := strconv.ParseFloat(fmt.Sprintf("%v", op2.Valor), 64)
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: environment.BOOLEAN, Valor: val1 < val2}
 			} else {
-				ast.SetError("ERROR: No es posible comparar <", o.Lin, o.Col)
+				ast.SetError(" No es posible comparar <", o.Lin, o.Col)
 			}
 		}
 	case ">":
@@ -150,7 +150,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				val2, _ := strconv.ParseFloat(fmt.Sprintf("%v", op2.Valor), 64)
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: environment.BOOLEAN, Valor: val1 > val2}
 			} else {
-				ast.SetError("ERROR: No es posible comparar >", o.Lin, o.Col)
+				ast.SetError(" No es posible comparar >", o.Lin, o.Col)
 			}
 		}
 	case "<=":
@@ -163,7 +163,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				val2, _ := strconv.ParseFloat(fmt.Sprintf("%v", op2.Valor), 64)
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: environment.BOOLEAN, Valor: val1 <= val2}
 			} else {
-				ast.SetError("ERROR: No es posible comparar <=", o.Lin, o.Col)
+				ast.SetError(" No es posible comparar <=", o.Lin, o.Col)
 			}
 		}
 	case ">=":
@@ -176,7 +176,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				val2, _ := strconv.ParseFloat(fmt.Sprintf("%v", op2.Valor), 64)
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: environment.BOOLEAN, Valor: val1 >= val2}
 			} else {
-				ast.SetError("ERROR: No es posible comparar >=", o.Lin, o.Col)
+				ast.SetError(" No es posible comparar >=", o.Lin, o.Col)
 			}
 		}
 	case "==":
@@ -184,7 +184,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 			if op1.Tipo == op2.Tipo {
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: environment.BOOLEAN, Valor: op1.Valor == op2.Valor}
 			} else {
-				ast.SetError("ERROR: No es posible comparar == ", o.Lin, o.Col)
+				ast.SetError(" No es posible comparar == ", o.Lin, o.Col)
 			}
 		}
 	case "!=":
@@ -192,7 +192,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 			if op1.Tipo == op2.Tipo {
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: environment.BOOLEAN, Valor: op1.Valor != op2.Valor}
 			} else {
-				ast.SetError("ERROR: No es posible comparar !=", o.Lin, o.Col)
+				ast.SetError(" No es posible comparar !=", o.Lin, o.Col)
 			}
 		}
 	case "&&":
@@ -200,7 +200,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 			if (op1.Tipo == environment.BOOLEAN) && (op2.Tipo == environment.BOOLEAN) {
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: environment.BOOLEAN, Valor: op1.Valor.(bool) && op2.Valor.(bool)}
 			} else {
-				ast.SetError("ERROR: tipo no compatible &&", o.Lin, o.Col)
+				ast.SetError(" tipo no compatible &&", o.Lin, o.Col)
 			}
 		}
 	case "||":
@@ -208,7 +208,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 			if (op1.Tipo == environment.BOOLEAN) && (op2.Tipo == environment.BOOLEAN) {
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: environment.BOOLEAN, Valor: op1.Valor.(bool) || op2.Valor.(bool)}
 			} else {
-				ast.SetError("ERROR: tipo no compatible ||", o.Lin, o.Col)
+				ast.SetError(" tipo no compatible ||", o.Lin, o.Col)
 			}
 		}
 	case "+=":
@@ -231,7 +231,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				op1.Valor = newValue
 				return op1
 			} else {
-				ast.SetError("ERROR: No es posible realizar +=", o.Lin, o.Col)
+				ast.SetError(" No es posible realizar +=", o.Lin, o.Col)
 			}
 		}
 	case "-=":
@@ -248,7 +248,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				op1.Valor = newValue
 				return op1
 			} else {
-				ast.SetError("ERROR: No es posible realizar -=", o.Lin, o.Col)
+				ast.SetError(" No es posible realizar -=", o.Lin, o.Col)
 			}
 		}
 	case "NEGACION":
@@ -259,7 +259,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				val1, _ := strconv.ParseFloat(fmt.Sprintf("%v", op1.Valor), 64)
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: op1.Tipo, Valor: 0 - val1}
 			} else {
-				ast.SetError("ERROR: No es posible realizar la NEGACIÓN", o.Lin, o.Col)
+				ast.SetError(" No es posible realizar la NEGACIÓN", o.Lin, o.Col)
 			}
 		}
 	case ",":
@@ -283,7 +283,7 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				r2 := stringify(op2.Valor)
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: r1 + " " + r2}
 			} else {
-				ast.SetError("ERROR: No es posible sumar", o.Lin, o.Col)
+				ast.SetError(" No es posible concatenar", o.Lin, o.Col)
 			}
 		}
 	}

@@ -11,10 +11,11 @@ type Declaration struct {
 	Id        string
 	Tipo      environment.TipoExpresion
 	Expresion interfaces.Expression
+	Mutable   bool
 }
 
-func NewDeclaration(lin int, col int, id string, tipo environment.TipoExpresion, val interfaces.Expression) Declaration {
-	instr := Declaration{lin, col, id, tipo, val}
+func NewDeclaration(lin int, col int, id string, tipo environment.TipoExpresion, val interfaces.Expression, mut bool) Declaration {
+	instr := Declaration{lin, col, id, tipo, val, mut}
 	return instr
 }
 
@@ -22,15 +23,17 @@ func (p Declaration) Ejecutar(ast *environment.AST, env interface{}) interface{}
 	if p.Expresion == nil {
 		// Asignar el valor nil al símbolo en el entorno
 		env.(environment.Environment).SaveVariable(p.Id, environment.Symbol{
-			Lin:   p.Lin,
-			Col:   p.Col,
-			Tipo:  p.Tipo,
-			Valor: nil,
+			Lin:     p.Lin,
+			Col:     p.Col,
+			Tipo:    p.Tipo,
+			Valor:   nil,
+			Mutable: p.Mutable,
 		})
 	} else {
 		// Traer simbolo
 		var result environment.Symbol
 		result = p.Expresion.Ejecutar(ast, env)
+		result.Mutable = p.Mutable
 
 		// Validar tipos
 		if result.Tipo == environment.ARRAY {

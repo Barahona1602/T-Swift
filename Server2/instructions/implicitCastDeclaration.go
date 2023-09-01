@@ -13,10 +13,11 @@ type CastDeclaration struct {
 	Id        string
 	Tipo      environment.TipoExpresion
 	Expresion interfaces.Expression
+	Mutable   bool
 }
 
-func NewCastDeclaration(lin int, col int, id string, tipo environment.TipoExpresion, val interfaces.Expression) CastDeclaration {
-	instr := CastDeclaration{lin, col, id, tipo, val}
+func NewCastDeclaration(lin int, col int, id string, tipo environment.TipoExpresion, val interfaces.Expression, mut bool) CastDeclaration {
+	instr := CastDeclaration{lin, col, id, tipo, val, mut}
 	return instr
 }
 
@@ -24,14 +25,16 @@ func (p CastDeclaration) Ejecutar(ast *environment.AST, env interface{}) interfa
 	if p.Expresion == nil {
 		// Asignar el valor nil al símbolo en el entorno
 		env.(environment.Environment).SaveVariable(p.Id, environment.Symbol{
-			Lin:   p.Lin,
-			Col:   p.Col,
-			Tipo:  p.Tipo,
-			Valor: nil,
+			Lin:     p.Lin,
+			Col:     p.Col,
+			Tipo:    p.Tipo,
+			Valor:   nil,
+			Mutable: p.Mutable,
 		})
 	} else {
 		// Realizar casteo implícito según el tipo de la variable
 		castedValue := performImplicitCast(p.Expresion.Ejecutar(ast, env), p.Tipo, ast)
+		castedValue.Mutable = p.Mutable
 
 		// Validar tipos
 		if castedValue.Tipo == p.Tipo {

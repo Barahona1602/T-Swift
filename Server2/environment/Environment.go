@@ -49,11 +49,17 @@ func (env Environment) SetVariable(id string, value Symbol) Symbol {
 	tmpEnv = env
 	for {
 		if variable, ok := tmpEnv.Tabla[id]; ok {
-			if tmpEnv.Tabla[id].Tipo == value.Tipo {
-				tmpEnv.Tabla[id] = value
-				return variable
+			value.Mutable = variable.Mutable
+			if value.Mutable == true {
+				if tmpEnv.Tabla[id].Tipo == value.Tipo {
+					tmpEnv.Tabla[id] = value
+					return variable
+				} else {
+					fmt.Println("El tipo de dato es incorrecto")
+					return Symbol{Lin: 0, Col: 0, Tipo: NIL, Valor: 0}
+				}
 			} else {
-				fmt.Println("El tipo de dato es incorrecto")
+				fmt.Println("La declaracion ", id, " es let y no se puede modificar")
 				return Symbol{Lin: 0, Col: 0, Tipo: NIL, Valor: 0}
 			}
 		}
@@ -108,61 +114,53 @@ func GetTable(env Environment) map[string]Symbol {
 
 func generateHTMLTable(env Environment) string {
 	html := `
-		<style>
-			body {
-				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-				'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-				sans-serif;
-			  -webkit-font-smoothing: antialiased;
-			  -moz-osx-font-smoothing: grayscale;
-				background-color: #282c34; /* Color de fondo personalizado */
-				color: white; /* Color de texto blanco */
-				font-size: calc(8px + 1vmin); /* Tamaño de fuente reducido */
-			}
-			h1 {
-				text-align: center;
-				margin-top: 20px;
-			}
-			table {
-				width: 400px; /* Hacer la tabla más ancha */
-				margin: auto;
-				border-collapse: collapse;
-				border: 1px solid white; /* Borde blanco */
-				margin-top: 20px;
-				font-size: calc(8px + 1vmin); /* Tamaño de fuente reducido */
-			}
-			th, td {
-				padding: 12px; /* Mayor espacio alrededor de los elementos */
-				text-align: left;
-				font-size: calc(9px + 1vmin); /* Tamaño de fuente reducido */
-			}
-			tr:nth-child(even) {
-				background-color: transparent; /* Celda transparente */
-			}
-			th {
-				background-color: #00BFFF; /* Color celeste */
-				color: white;
-			}
-		</style>
-	<body>
-		<table>
-			<tr>
-				<th>Variable</th>
-				<th>Tipo</th>
-				<th>Ámbito</th>
-				<th>Línea</th>
-				<th>Columna</th>
-			</tr>
-	`
+        <style>
+            body {
+                // ... (estilos anteriores)
+            }
+            h1 {
+                // ... (estilos anteriores)
+            }
+            table {
+                width: 800px; /* Doble del ancho original */
+                margin: auto;
+                border-collapse: collapse;
+                border: 1px solid white;
+                margin-top: 20px;
+                font-size: calc(8px + 1vmin);
+            }
+            th, td {
+                padding: 12px;
+                text-align: left;
+                font-size: calc(9px + 1vmin);
+            }
+            tr:nth-child(even) {
+                background-color: transparent;
+            }
+            th {
+                background-color: #00BFFF;
+                color: white;
+            }
+        </style>
+        <body>
+            <table>
+                <tr>
+                    <th>Variable</th>
+                    <th>Tipo</th>
+                    <th>Ámbito</th>
+                    <th>Línea</th>
+                    <th>Columna</th>
+                </tr>
+    `
 
 	for id, symbol := range env.Tabla {
 		html += fmt.Sprintf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%d</td><td>%d</td></tr>", id, getTypeName(symbol.Tipo), env.Id, symbol.Lin, symbol.Col)
 	}
 
 	html += `
-		</table>
-	</body>
-	`
+            </table>
+        </body>
+    `
 
 	return html
 }
