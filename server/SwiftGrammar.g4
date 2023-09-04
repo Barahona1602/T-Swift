@@ -78,7 +78,7 @@ declarationstmt returns [interfaces.Instruction dec]
 assignstmt returns [interfaces.Instruction asg]
 : ID op=IG expr { $asg = instructions.NewAssign($ID.line, $ID.pos, $ID.text, $expr.e) }
 | ID op=(SUB_IG | SUM_IG) expr { $asg = instructions.NewImplicitAssignment($ID.line, $ID.pos, $ID.text, $op.text, $expr.e); }
-| listArray IG expr
+| ID listAccessArray IG expr { $asg = instructions.NewArrayAssign($ID.line, $ID.pos, $ID.text, $listAccessArray.l, $expr.e) }
 ;
 
 forstmt returns [interfaces.Instruction fr]
@@ -196,6 +196,18 @@ listParams returns[[]interface{} l]
                                 $l = arr
                             }   
 | expr {
+            $l = []interface{}{}
+            $l = append($l, $expr.e)
+        }
+;
+
+listAccessArray returns[[]interface{} l]
+: list=listAccessArray CORIZQ expr CORDER {
+                                var arr []interface{}
+                                arr = append($list.l, $expr.e)
+                                $l = arr
+                            }   
+|   CORIZQ expr CORDER {
             $l = []interface{}{}
             $l = append($l, $expr.e)
         }

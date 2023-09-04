@@ -122,6 +122,12 @@ func (s *BaseSwiftGrammarListener) EnterListParams(ctx *ListParamsContext) {}
 // ExitListParams is called when production listParams is exited.
 func (s *BaseSwiftGrammarListener) ExitListParams(ctx *ListParamsContext) {}
 
+// EnterListAccessArray is called when production listAccessArray is entered.
+func (s *BaseSwiftGrammarListener) EnterListAccessArray(ctx *ListAccessArrayContext) {}
+
+// ExitListAccessArray is called when production listAccessArray is exited.
+func (s *BaseSwiftGrammarListener) ExitListAccessArray(ctx *ListAccessArrayContext) {}
+
 // EnterListArray is called when production listArray is entered.
 func (s *BaseSwiftGrammarListener) EnterListArray(ctx *ListArrayContext) {}
 
