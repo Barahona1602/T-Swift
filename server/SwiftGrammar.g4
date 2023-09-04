@@ -48,7 +48,7 @@ instruction returns [interfaces.Instruction inst]
 | continuestmt { $inst = $continuestmt.cnt }
 | fnArray { $inst = $fnArray.p }
 //| switchstmt { $inst = $switchstmt.swt }
-// | returnstmt { $inst = $returnstmt.ret }
+| returnstmt { $inst = $returnstmt.ret }
 ;
 
 printstmt returns [interfaces.Instruction prnt]
@@ -68,15 +68,17 @@ whilestmt returns [interfaces.Instruction whl]
 
 declarationstmt returns [interfaces.Instruction dec]
 : VAR ID D_PTS types IG expr  { $dec = instructions.NewDeclaration($VAR.line, $VAR.pos, $ID.text, $types.ty, $expr.e, true) }
-| VAR ID op=IG types PARIZQ expr PARDER { $dec = instructions.NewCastDeclaration($VAR.line, $VAR.pos, $ID.text, $types.ty, $expr.e, true) }
+| VAR ID IG expr { $dec = instructions.NewDeclaration($VAR.line, $VAR.pos, $ID.text, environment.UNKNOWN, $expr.e, true) }
 | VAR ID D_PTS types  { $dec = instructions.NewDeclaration($VAR.line, $VAR.pos, $ID.text, $types.ty, nil, true) }
 | LET ID D_PTS types IG expr  { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expr.e, false) }
 | LET ID D_PTS types  { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, false) }
+| LET ID IG expr { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, environment.UNKNOWN, $expr.e, false) }
 ;
 
 assignstmt returns [interfaces.Instruction asg]
 : ID op=IG expr { $asg = instructions.NewAssign($ID.line, $ID.pos, $ID.text, $expr.e) }
 | ID op=(SUB_IG | SUM_IG) expr { $asg = instructions.NewImplicitAssignment($ID.line, $ID.pos, $ID.text, $op.text, $expr.e); }
+| listArray IG expr
 ;
 
 forstmt returns [interfaces.Instruction fr]
@@ -153,6 +155,7 @@ expr returns [interfaces.Expression e]
 | left=expr op=(IG_IG|DIF) right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=AND right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=OR right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
+| NOT right=expr {$e = expressions.NewOperation($NOT.line, $NOT.pos, $right.e, $NOT.text ,nil)}
 | PARIZQ expr PARDER { $e = $expr.e }
 | CORIZQ CORDER { $e = expressions.NewArray($CORIZQ.line, $CORIZQ.pos, nil) }
 | list=listArray { $e = $list.p}
@@ -182,7 +185,7 @@ expr returns [interfaces.Expression e]
 | FAL { $e = expressions.NewPrimitive($FAL.line, $FAL.pos, false, environment.BOOLEAN) }
 | ID PUNTO COUNT { $e = expressions.NewCount($ID.line, $ID.pos, $ID.text) }
 | ID PUNTO ISEMPTY { $e = expressions.NewIsEmpty($ID.line, $ID.pos, $ID.text) }
-| NIL { $e = expressions.NewPrimitive($NIL.line, $NIL.pos, nil, environment.NIL) }
+| NIL { $e = expressions.NewPrimitive($NIL.line, $NIL.pos, "nil", environment.NIL) }
 ;
 
 
@@ -199,10 +202,17 @@ listParams returns[[]interface{} l]
 ;
 
 listArray returns[interfaces.Expression p]
-: list = listArray types IG CORIZQ expr CORDER { $p = expressions.NewArrayAccess($list.start.GetLine(), $list.start.GetColumn(), $list.p, $expr.e) }
+: list = listArray CORIZQ expr CORDER { $p = expressions.NewArrayAccess($list.start.GetLine(), $list.start.GetColumn(), $list.p, $expr.e) }
+| list = listArray types IG CORIZQ expr CORDER { $p = expressions.NewArrayAccess($list.start.GetLine(), $list.start.GetColumn(), $list.p, $expr.e) }
 | ID { $p = expressions.NewCallVar($ID.line, $ID.pos, $ID.text)}
 ;
 
 exprComa returns[interfaces.Expression t]
-: left=expr op=COMA right=expr { $t = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
+: left=exprComa op=COMA right=expr { $t = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.t, $op.text, $right.e) }
+| expr { $t = $expr.e }
 ;
+
+// fnstmt returns[interfaces.Instruction fn]
+// : FUNC ID PARIZQ listParams PARDER FLECHA types LLAVEIZQ block LLAVEDER { $fn = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParams.l, $types.ty, $block.blk) }
+// | FUNC ID PARIZQ listParams PARDER LLAVEIZQ block LLAVEDER { $fn = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParams.l, nil, $block.blk) }
+// ; 

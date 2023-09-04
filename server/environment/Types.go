@@ -11,4 +11,5 @@ const (
 	ARRAY                        //5
 	RANGE                        //6
 	STR                          //7
+	UNKNOWN                      //8
 )

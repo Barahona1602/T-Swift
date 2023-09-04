@@ -251,6 +251,14 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				ast.SetError(" No es posible realizar -=", o.Lin, o.Col)
 			}
 		}
+	case "!":
+		{
+			if op1.Tipo == environment.BOOLEAN {
+				return environment.Symbol{Lin: o.Lin, Col: o.Col, Id: "", Tipo: environment.BOOLEAN, Valor: !op1.Valor.(bool)}
+			} else {
+				ast.SetError(" No es posible realizar !", o.Lin, o.Col)
+			}
+		}
 	case "NEGACION":
 		{
 			if op1.Tipo == environment.INTEGER {
@@ -279,6 +287,10 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 				val2, _ := strconv.ParseFloat(stringify(op2.Valor), 64)
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: val1 + val2}
 			} else if dominante == environment.STRING {
+				r1 := stringify(op1.Valor)
+				r2 := stringify(op2.Valor)
+				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: r1 + " " + r2}
+			} else if dominante == environment.NIL {
 				r1 := stringify(op1.Valor)
 				r2 := stringify(op2.Valor)
 				return environment.Symbol{Lin: o.Lin, Col: o.Col, Tipo: dominante, Valor: r1 + " " + r2}

@@ -10,7 +10,7 @@ type If struct {
 	Col        int
 	Expresion  interfaces.Expression
 	Bloque     []interface{}
-	ElseBloque []interface{} // Agregamos un campo para el bloque "else"
+	ElseBloque []interface{}
 }
 
 func NewIf(lin int, col int, condition interfaces.Expression, bloque, elseBloque []interface{}) If {
@@ -28,33 +28,22 @@ func (p If) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 
 	if condicion.Valor == true {
 		ifEnv := environment.NewEnvironment(env.(environment.Environment), "IF")
-		breakFlag := false
-		continueFlag := false
 
 		for _, inst := range p.Bloque {
 			if instruction, isInstruction := inst.(interfaces.Instruction); isInstruction {
 				result := instruction.Ejecutar(ast, ifEnv)
 				if sym, isSymbol := result.(environment.Symbol); isSymbol {
-					if sym.ReturnFlag {
-						return result // Handle the return statement
-					} else if sym.BreakFlag {
-						breakFlag = true
-						break
+					if sym.BreakFlag {
+						return sym
 					} else if sym.ContinueFlag {
-						continueFlag = true
-						break
+						return sym
+					} else if sym.ReturnFlag {
+						return sym
 					}
 				}
 			}
 		}
 
-		if breakFlag {
-			return nil
-		}
-
-		if continueFlag {
-			return nil
-		}
 	} else {
 		if p.ElseBloque != nil {
 			elseEnv := environment.NewEnvironment(env.(environment.Environment), "ELSE")
@@ -63,9 +52,9 @@ func (p If) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 					result := instruction.Ejecutar(ast, elseEnv)
 					if sym, isSymbol := result.(environment.Symbol); isSymbol {
 						if sym.ReturnFlag {
-							return result // Handle the return statement
+							return sym // Manejar la declaración de retorno
 						} else if sym.BreakFlag || sym.ContinueFlag {
-							return nil
+							return sym
 						}
 					}
 				}

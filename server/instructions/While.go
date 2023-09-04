@@ -26,7 +26,7 @@ func (p While) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 			return nil
 		}
 
-		if condicion.Valor == true {
+		if condicion.Valor.(bool) { // Cambiamos a condicion.Valor.(bool)
 			whileEnv := environment.NewEnvironment(env.(environment.Environment), "WHILE")
 			breakFlag := false
 			continueFlag := false
@@ -53,7 +53,7 @@ func (p While) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 			}
 
 			if continueFlag {
-				continue
+				// No hacemos nada aquí para continuar con la próxima iteración del bucle
 			}
 		} else {
 			break

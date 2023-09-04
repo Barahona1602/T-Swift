@@ -44,6 +44,8 @@ func (p Declaration) Ejecutar(ast *environment.AST, env interface{}) interface{}
 			}
 		} else if result.Tipo == p.Tipo {
 			env.(environment.Environment).SaveVariable(p.Id, result)
+		} else if p.Tipo == environment.UNKNOWN { //aqui no se define tipo
+			env.(environment.Environment).SaveVariable(p.Id, result)
 		} else {
 			ast.SetError("Los tipos de datos son incorrectos", p.Lin, p.Col)
 		}

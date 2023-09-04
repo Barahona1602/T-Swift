@@ -44,6 +44,9 @@ func (p Cast) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol
 		case environment.FLOAT:
 			val := fmt.Sprintf("%.4f", tmpExp.Valor.(float64)) // Agregar cuatro ceros decimales
 			return environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: p.Tipo, Valor: val}
+		case environment.BOOLEAN:
+			return environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: p.Tipo, Valor: strconv.FormatBool(tmpExp.Valor.(bool))}
+
 		default:
 			ast.SetError("No se pueden castear los tipos indicados", p.Lin, p.Col)
 		}
