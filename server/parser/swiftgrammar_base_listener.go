@@ -104,6 +104,42 @@ func (s *BaseSwiftGrammarListener) EnterFnArray(ctx *FnArrayContext) {}
 // ExitFnArray is called when production fnArray is exited.
 func (s *BaseSwiftGrammarListener) ExitFnArray(ctx *FnArrayContext) {}
 
+// EnterFnstmt is called when production fnstmt is entered.
+func (s *BaseSwiftGrammarListener) EnterFnstmt(ctx *FnstmtContext) {}
+
+// ExitFnstmt is called when production fnstmt is exited.
+func (s *BaseSwiftGrammarListener) ExitFnstmt(ctx *FnstmtContext) {}
+
+// EnterListParamsFunc is called when production listParamsFunc is entered.
+func (s *BaseSwiftGrammarListener) EnterListParamsFunc(ctx *ListParamsFuncContext) {}
+
+// ExitListParamsFunc is called when production listParamsFunc is exited.
+func (s *BaseSwiftGrammarListener) ExitListParamsFunc(ctx *ListParamsFuncContext) {}
+
+// EnterParametro is called when production parametro is entered.
+func (s *BaseSwiftGrammarListener) EnterParametro(ctx *ParametroContext) {}
+
+// ExitParametro is called when production parametro is exited.
+func (s *BaseSwiftGrammarListener) ExitParametro(ctx *ParametroContext) {}
+
+// EnterCallFunction is called when production callFunction is entered.
+func (s *BaseSwiftGrammarListener) EnterCallFunction(ctx *CallFunctionContext) {}
+
+// ExitCallFunction is called when production callFunction is exited.
+func (s *BaseSwiftGrammarListener) ExitCallFunction(ctx *CallFunctionContext) {}
+
+// EnterCallExp is called when production callExp is entered.
+func (s *BaseSwiftGrammarListener) EnterCallExp(ctx *CallExpContext) {}
+
+// ExitCallExp is called when production callExp is exited.
+func (s *BaseSwiftGrammarListener) ExitCallExp(ctx *CallExpContext) {}
+
+// EnterListParamsCall is called when production listParamsCall is entered.
+func (s *BaseSwiftGrammarListener) EnterListParamsCall(ctx *ListParamsCallContext) {}
+
+// ExitListParamsCall is called when production listParamsCall is exited.
+func (s *BaseSwiftGrammarListener) ExitListParamsCall(ctx *ListParamsCallContext) {}
+
 // EnterTypes is called when production types is entered.
 func (s *BaseSwiftGrammarListener) EnterTypes(ctx *TypesContext) {}
 

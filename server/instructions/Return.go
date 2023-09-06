@@ -3,6 +3,7 @@ package instructions
 import (
 	"Server2/environment"
 	"Server2/interfaces"
+	"fmt"
 )
 
 type Return struct {
@@ -18,6 +19,7 @@ func NewReturn(lin int, col int, expr interfaces.Expression) Return {
 func (p Return) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 	if p.Expression != nil {
 		returnValue := p.Expression.Ejecutar(ast, env)
+		fmt.Println(returnValue.Valor)
 		return environment.Symbol{
 			Lin:   p.Lin,
 			Col:   p.Col,

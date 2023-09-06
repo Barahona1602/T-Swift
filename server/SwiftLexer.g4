@@ -80,6 +80,7 @@ COMA:           ',';
 PUNTO:          '.';
 COMILLA:        '"';
 FLECHA:         '->';
+GUIONBAJO:      '_';
 
 // skip
 WHITESPACE: [ \\\r\n\t]+ -> skip;

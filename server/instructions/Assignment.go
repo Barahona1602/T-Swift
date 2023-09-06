@@ -21,5 +21,5 @@ func (p Assignment) Ejecutar(ast *environment.AST, env interface{}) interface{} 
 	var result environment.Symbol
 	result = p.Expresion.Ejecutar(ast, env)
 	env.(environment.Environment).SetVariable(p.Id, result)
-	return result
+	return nil
 }

@@ -49,6 +49,24 @@ type SwiftGrammarListener interface {
 	// EnterFnArray is called when entering the fnArray production.
 	EnterFnArray(c *FnArrayContext)
 
+	// EnterFnstmt is called when entering the fnstmt production.
+	EnterFnstmt(c *FnstmtContext)
+
+	// EnterListParamsFunc is called when entering the listParamsFunc production.
+	EnterListParamsFunc(c *ListParamsFuncContext)
+
+	// EnterParametro is called when entering the parametro production.
+	EnterParametro(c *ParametroContext)
+
+	// EnterCallFunction is called when entering the callFunction production.
+	EnterCallFunction(c *CallFunctionContext)
+
+	// EnterCallExp is called when entering the callExp production.
+	EnterCallExp(c *CallExpContext)
+
+	// EnterListParamsCall is called when entering the listParamsCall production.
+	EnterListParamsCall(c *ListParamsCallContext)
+
 	// EnterTypes is called when entering the types production.
 	EnterTypes(c *TypesContext)
 
@@ -108,6 +126,24 @@ type SwiftGrammarListener interface {
 
 	// ExitFnArray is called when exiting the fnArray production.
 	ExitFnArray(c *FnArrayContext)
+
+	// ExitFnstmt is called when exiting the fnstmt production.
+	ExitFnstmt(c *FnstmtContext)
+
+	// ExitListParamsFunc is called when exiting the listParamsFunc production.
+	ExitListParamsFunc(c *ListParamsFuncContext)
+
+	// ExitParametro is called when exiting the parametro production.
+	ExitParametro(c *ParametroContext)
+
+	// ExitCallFunction is called when exiting the callFunction production.
+	ExitCallFunction(c *CallFunctionContext)
+
+	// ExitCallExp is called when exiting the callExp production.
+	ExitCallExp(c *CallExpContext)
+
+	// ExitListParamsCall is called when exiting the listParamsCall production.
+	ExitListParamsCall(c *ListParamsCallContext)
 
 	// ExitTypes is called when exiting the types production.
 	ExitTypes(c *TypesContext)

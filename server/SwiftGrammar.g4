@@ -47,8 +47,10 @@ instruction returns [interfaces.Instruction inst]
 | breakstmt { $inst = $breakstmt.brk }
 | continuestmt { $inst = $continuestmt.cnt }
 | fnArray { $inst = $fnArray.p }
-//| switchstmt { $inst = $switchstmt.swt }
+//| structCreation { $inst = $structCreation.dec }
 | returnstmt { $inst = $returnstmt.ret }
+| fnstmt { $inst = $fnstmt.fn }
+| callFunction { $inst = $callFunction.cf }
 ;
 
 printstmt returns [interfaces.Instruction prnt]
@@ -90,25 +92,6 @@ guardstmt returns [interfaces.Instruction grd]
 : GUARD expr ELSE LLAVEIZQ block LLAVEDER { $grd = instructions.NewGuard($GUARD.line, $GUARD.pos, $expr.e, $block.blk) }
 ;
 
-// switchstmt returns [interfaces.Instruction swt]
-// : SWITCH expr LLAVEIZQ cases LLAVEDER { $swt = instructions.NewSwitch($SWITCH.line, $SWITCH.pos, $expr.e, $cases.cases) }
-// ;
-
-// cases returns [interfaces.Cases cases]
-// : case+=case+
-//     {
-//         var arr []interfaces.Case
-//         for _, e := range $case {
-//             arr = append(arr, e.c)
-//         }
-//         $cases = instructions.NewCases(arr)
-//     }
-// ;
-
-// case returns [interfaces.Case c]
-// : CASE expr D_PTS block { $c = instructions.NewCase($CASE.line, $CASE.pos, $expr.e, $block.blk) }
-// | RETURN expr D_PTS block { $c = instructions.NewCase($RETURN.line, $RETURN.pos, $expr.e, $block.blk) }
-// ;
 
 breakstmt returns [interfaces.Instruction brk]
 : BREAK { $brk = instructions.NewBreak($BREAK.line, $BREAK.pos) }
@@ -129,10 +112,94 @@ fnArray returns[interfaces.Instruction p]
 | ID PUNTO REMOVELAST PARIZQ PARDER { $p = instructions.NewRemoveLast($ID.line, $ID.pos, $ID.text) }
 ;
 
-// fnstmt returns[interfaces.Instruction fn]
-// : FUNC ID PARIZQ listParams PARDER FLECHA types LLAVEIZQ block LLAVEDER { $fn = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParams.l, $types.ty, $block.blk) }
-// | FUNC ID PARIZQ listParams PARDER LLAVEIZQ block LLAVEDER { $fn = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParams.l, nil, $block.blk) }
-// ; 
+// structCreation returns[interfaces.Instruction dec]
+// : STRUCT ID LLAVEIZQ listStructDec LLAVEDER { $dec = instructions.NewStruct($STRUCT.line, $STRUCT.pos, $ID.text, $listStructDec.l) }
+// ;
+
+// listStructDec returns[[]interface{} l]
+// : list=listStructDec COMA VAR ID D_PTS types {
+//                                                 var arr []interface{}
+//                                                 newParams := environment.NewStructType($ID.text, $types.ty)
+//                                                 arr = append($list.l, newParams)
+//                                                 $l = arr
+//                                             }
+// | VAR ID D_PTS types {
+//                         var arr []interface{}
+//                         newParams := environment.NewStructType($ID.text, $types.ty)
+//                         arr = append(arr, newParams)
+//                         $l = arr
+//                     }
+// |  { $l = []interface{}{} }
+// ;
+
+// listStructExp returns[[]interface{} l]
+// : list=listStructExp COMA ID D_PTS expr {
+//                                             var arr []interface{}
+//                                             StrExp := environment.NewStructContent($ID.text, $expr.e)
+//                                             arr = append($list.l, StrExp)
+//                                             $l = arr
+//                                         }
+// | ID D_PTS expr{
+//                     var arr []interface{}
+//                     StrExp := environment.NewStructContent($ID.text, $expr.e)
+//                     arr = append(arr, StrExp)
+//                     $l = arr
+//                 }
+// |   {
+//         $l = []interface{}{}
+//     }
+// ;
+
+fnstmt returns[interfaces.Instruction fn]
+: FUNC ID PARIZQ listParamsFunc PARDER FLECHA types LLAVEIZQ block LLAVEDER { $fn = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParamsFunc.l, $types.ty, $block.blk) }
+| FUNC ID PARIZQ listParamsFunc PARDER LLAVEIZQ block LLAVEDER { $fn = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParamsFunc.l, environment.NIL, $block.blk) }
+; 
+
+listParamsFunc returns[[]interface{} l]
+: list=listParamsFunc COMA parametro {
+                                var arr []interface{}
+                                arr = append($list.l, $parametro.p)
+                                $l = arr
+                            }   
+| parametro {
+            $l = []interface{}{}
+            $l = append($l, $parametro.p)
+        }
+|   {
+        $l = []interface{}{}
+    }
+;
+
+parametro returns[interfaces.Instruction p]
+: ID D_PTS types  { $p = instructions.NewParams($ID.line,$ID.pos,$ID.text ,$ID.text, $types.ty ,false)}
+| ID D_PTS INOUT types  { $p = instructions.NewParams($ID.line,$ID.pos,$ID.text,$ID.text, $types.ty,true)}
+| exte=(GUIONBAJO|ID) ID D_PTS types { $p = instructions.NewParams($ID.line,$ID.pos, $ID.text,$exte.text, $types.ty,false)}
+| exte=(GUIONBAJO|ID) ID D_PTS INOUT types { $p = instructions.NewParams($ID.line,$ID.pos, $ID.text,$exte.text, $types.ty,true)}
+;
+
+
+callFunction returns[interfaces.Instruction cf]
+: ID PARIZQ listParamsCall PARDER { $cf = instructions.NewCallFunc($ID.line, $ID.pos, $ID.text, $listParamsCall.l) }
+;
+
+callExp returns[interfaces.Expression cfe]
+: ID PARIZQ listParamsCall PARDER { $cfe = expressions.NewCallExp($ID.line, $ID.pos, $ID.text, $listParamsCall.l) }
+;
+
+listParamsCall returns[[]interface{} l]
+: list=listParamsCall COMA expr {
+                                    var arr []interface{}
+                                    arr = append($list.l, $expr.e)
+                                    $l = arr
+                                }
+| expr  {
+            $l = []interface{}{}
+            $l = append($l, $expr.e)
+        }
+|   {
+        $l = []interface{}{}
+    }
+;
 
 types returns[environment.TipoExpresion ty]
 : INT { $ty = environment.INTEGER }
@@ -156,6 +223,8 @@ expr returns [interfaces.Expression e]
 | left=expr op=AND right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | left=expr op=OR right=expr { $e = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.e, $op.text, $right.e) }
 | NOT right=expr {$e = expressions.NewOperation($NOT.line, $NOT.pos, $right.e, $NOT.text ,nil)}
+//| ID CORIZQ listStructExp CORDER { $e = expressions.NewStructExp($ID.line, $ID.pos, $ID.text, $listStructExp.l ) }
+| callExp { $e = $callExp.cfe }
 | PARIZQ expr PARDER { $e = $expr.e }
 | CORIZQ CORDER { $e = expressions.NewArray($CORIZQ.line, $CORIZQ.pos, nil) }
 | list=listArray { $e = $list.p}
@@ -223,8 +292,3 @@ exprComa returns[interfaces.Expression t]
 : left=exprComa op=COMA right=expr { $t = expressions.NewOperation($left.start.GetLine(), $left.start.GetColumn(), $left.t, $op.text, $right.e) }
 | expr { $t = $expr.e }
 ;
-
-// fnstmt returns[interfaces.Instruction fn]
-// : FUNC ID PARIZQ listParams PARDER FLECHA types LLAVEIZQ block LLAVEDER { $fn = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParams.l, $types.ty, $block.blk) }
-// | FUNC ID PARIZQ listParams PARDER LLAVEIZQ block LLAVEDER { $fn = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParams.l, nil, $block.blk) }
-// ; 

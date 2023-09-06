@@ -7,10 +7,8 @@ type Symbol struct {
 	Tipo         TipoExpresion
 	Valor        interface{}
 	Mutable      bool
-	Capacity     int
-	TipoArr      TipoExpresion
-	ExtraTipo    string
-	Vectipo      TipoExpresion
+	Externo      string
+	Inout        bool
 	ReturnFlag   bool
 	BreakFlag    bool
 	ContinueFlag bool
