@@ -118,25 +118,31 @@ structCreation returns[interfaces.Instruction dec]
 ;
 
 listStructDec returns[[]interface{} l]
-: list=listStructDec (COMA)? VAR ID D_PTS types {
+: list=listStructDec (COMA)? (VAR|LET) ID D_PTS types {
                                                 var arr []interface{}
                                                 newParams := environment.NewStructType($ID.text, $types.ty, "")
                                                 arr = append($list.l, newParams)
                                                 $l = arr
                                             }
-| list=listStructDec (COMA)? VAR id1=ID D_PTS id2=ID {
+| list=listStructDec (COMA)? (VAR|LET) id1=ID D_PTS id2=ID {
                                                 var arr []interface{}
                                                 newParams := environment.NewStructType($id1.text, environment.UNKNOWN, $id2.text)
                                                 arr = append($list.l, newParams)
                                                 $l = arr
                                             } 
-| VAR ID D_PTS types {
+| list=listStructDec (COMA)? (VAR|LET) id1=ID (D_PTS types)? IG expr {
+                                                var arr []interface{}
+                                                newParams := environment.NewStructType($id1.text, $types.ty, "")
+                                                arr = append($list.l, newParams)
+                                                $l = arr
+                                            }
+| (VAR|LET) ID D_PTS types {
                         var arr []interface{}
                         newParams := environment.NewStructType($ID.text, $types.ty, "")
                         arr = append(arr, newParams)
                         $l = arr
                     }
-| VAR id1=ID D_PTS id2=ID {
+| (VAR|LET) id1=ID D_PTS id2=ID {
                                                 var arr []interface{}
                                                 newParams := environment.NewStructType($id1.text,environment.UNKNOWN , $id2.text)
                                                 arr = append($list.l, newParams)

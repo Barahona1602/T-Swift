@@ -1,49 +1,52 @@
-// Función para intercambiar dos elementos en un arreglo
-func intercambiar(_ a: inout [Int], _ i: Int, _ j: Int) {
-    let aux = a[i]
-    a[i] = a[j]
-    a[j] = aux
-}
-
 // Algoritmo de ordenamiento por intercambio (Bubble Sort)
-func ordIntercambio(_ arr: inout [Int]) {
+func ordIntercambio(_ arr: [Int]) -> [Int] {
+    var sortedArr = arr
     var i = 0
-    var j = 0
-    
-    while i < (arr.count - 1) {
-        j = i + 1
-        while j < arr.count {
-            if arr[i] > arr[j] {
-                intercambiar(&arr, i, j)
+
+    while i < sortedArr.count - 1 {
+        var j = 0
+
+        while j < sortedArr.count - i - 1 {
+            if sortedArr[j] > sortedArr[j + 1] {
+                let temp = sortedArr[j]
+                sortedArr[j] = sortedArr[j + 1]
+                sortedArr[j + 1] = temp
             }
             j += 1
         }
+
         i += 1
     }
+
+    return sortedArr
 }
 
 // Algoritmo de ordenamiento por selección (Selection Sort)
-func ordSeleccion(_ arr: inout [Int]) {
+func ordSeleccion(_ arr: [Int]) -> [Int] {
+    var sortedArr = arr
     var i = 0
-    var j = 0
-    var indiceMenor = 0
-    let n = arr.count
-    
-    while i < (n - 1) {
-        indiceMenor = i
-        j = i + 1
-        while j < n {
-            if arr[j] < arr[indiceMenor] {
+
+    while i < sortedArr.count - 1 {
+        var indiceMenor = i
+        var j = i + 1
+
+        while j < sortedArr.count {
+            if sortedArr[j] < sortedArr[indiceMenor] {
                 indiceMenor = j
             }
             j += 1
         }
-        
+
         if i != indiceMenor {
-            intercambiar(&arr, i, indiceMenor)
+            let temp = sortedArr[i]
+            sortedArr[i] = sortedArr[indiceMenor]
+            sortedArr[indiceMenor] = temp
         }
+
         i += 1
     }
+
+    return sortedArr
 }
 
 // Función para imprimir un arreglo
@@ -66,12 +69,12 @@ print("=============================================")
 print("INTERCAMBIO:")
 var arr1: [Int] = [8, 4, 6, 2]
 printArray("entrada: ", arr1)
-ordIntercambio(&arr1)
+arr1 = ordIntercambio(arr1)
 printArray("salida: ", arr1)
 print("SELECCIÓN:")
 var arr2: [Int] = [40, 21, 1, 3, 14, 4]
 printArray("entrada: ", arr2)
-ordSeleccion(&arr2)
+arr2 = ordSeleccion(arr2)
 printArray("salida: ", arr2)
 
 var arr3: [Int] = [90, 3, 40, 10, 8, 5]
