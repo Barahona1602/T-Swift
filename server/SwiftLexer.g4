@@ -81,6 +81,7 @@ PUNTO:          '.';
 COMILLA:        '"';
 FLECHA:         '->';
 GUIONBAJO:      '_';
+AMP :           '&';
 
 // skip
 WHITESPACE: [ \\\r\n\t]+ -> skip;

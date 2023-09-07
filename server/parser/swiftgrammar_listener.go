@@ -49,6 +49,18 @@ type SwiftGrammarListener interface {
 	// EnterFnArray is called when entering the fnArray production.
 	EnterFnArray(c *FnArrayContext)
 
+	// EnterStructCreation is called when entering the structCreation production.
+	EnterStructCreation(c *StructCreationContext)
+
+	// EnterListStructDec is called when entering the listStructDec production.
+	EnterListStructDec(c *ListStructDecContext)
+
+	// EnterListStructExp is called when entering the listStructExp production.
+	EnterListStructExp(c *ListStructExpContext)
+
+	// EnterListAccessStruct is called when entering the listAccessStruct production.
+	EnterListAccessStruct(c *ListAccessStructContext)
+
 	// EnterFnstmt is called when entering the fnstmt production.
 	EnterFnstmt(c *FnstmtContext)
 
@@ -58,11 +70,11 @@ type SwiftGrammarListener interface {
 	// EnterParametro is called when entering the parametro production.
 	EnterParametro(c *ParametroContext)
 
-	// EnterCallFunction is called when entering the callFunction production.
-	EnterCallFunction(c *CallFunctionContext)
-
 	// EnterCallExp is called when entering the callExp production.
 	EnterCallExp(c *CallExpContext)
+
+	// EnterCallFunction is called when entering the callFunction production.
+	EnterCallFunction(c *CallFunctionContext)
 
 	// EnterListParamsCall is called when entering the listParamsCall production.
 	EnterListParamsCall(c *ListParamsCallContext)
@@ -127,6 +139,18 @@ type SwiftGrammarListener interface {
 	// ExitFnArray is called when exiting the fnArray production.
 	ExitFnArray(c *FnArrayContext)
 
+	// ExitStructCreation is called when exiting the structCreation production.
+	ExitStructCreation(c *StructCreationContext)
+
+	// ExitListStructDec is called when exiting the listStructDec production.
+	ExitListStructDec(c *ListStructDecContext)
+
+	// ExitListStructExp is called when exiting the listStructExp production.
+	ExitListStructExp(c *ListStructExpContext)
+
+	// ExitListAccessStruct is called when exiting the listAccessStruct production.
+	ExitListAccessStruct(c *ListAccessStructContext)
+
 	// ExitFnstmt is called when exiting the fnstmt production.
 	ExitFnstmt(c *FnstmtContext)
 
@@ -136,11 +160,11 @@ type SwiftGrammarListener interface {
 	// ExitParametro is called when exiting the parametro production.
 	ExitParametro(c *ParametroContext)
 
-	// ExitCallFunction is called when exiting the callFunction production.
-	ExitCallFunction(c *CallFunctionContext)
-
 	// ExitCallExp is called when exiting the callExp production.
 	ExitCallExp(c *CallExpContext)
+
+	// ExitCallFunction is called when exiting the callFunction production.
+	ExitCallFunction(c *CallFunctionContext)
 
 	// ExitListParamsCall is called when exiting the listParamsCall production.
 	ExitListParamsCall(c *ListParamsCallContext)

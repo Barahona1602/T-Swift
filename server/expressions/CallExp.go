@@ -45,7 +45,15 @@ func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Sym
 	}
 	//ejecutar bloque con entorno funcEnv
 	for _, inst := range funcSym.Block {
-		inst.(interfaces.Instruction).Ejecutar(ast, funcEnv)
+
+		result := inst.(interfaces.Instruction).Ejecutar(ast, funcEnv)
+
+		if sym, isSymbol := result.(environment.Symbol); isSymbol {
+			if sym.ReturnFlag {
+				return sym
+
+			}
+		}
 	}
 	return result
 }

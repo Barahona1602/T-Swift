@@ -127,8 +127,48 @@ func (env Environment) GetStruct(id string) Symbol {
 		}
 	}
 
-	fmt.Println("El struct ", id, " no existe")
+	fmt.Println("El struct ", id, " no existe GET")
 	return Symbol{Lin: 0, Col: 0, Tipo: NIL, Valor: 0}
+}
+
+func (env Environment) SetStruct(id []interface{}, value Symbol) Symbol {
+	var tmpEnv Environment
+	tmpEnv = env
+	for {
+		//creacion de diccionario temporal
+		var tmpDic map[string]Symbol
+		tmpDic = make(map[string]Symbol)
+		//asignacion de diccionario
+		tmpDic = tmpEnv.Tabla
+		//recorro la lista de id
+		for _, s := range id { //recorremos lista
+			//validando variable
+			if variable, ok := tmpDic[s.(string)]; ok {
+				if variable.Tipo == STRUCT {
+					if variable.Mutable == true {
+						tmpDic = variable.Valor.(map[string]Symbol)
+					} else {
+						fmt.Println("La variable no es mutable")
+						return variable
+					}
+				} else if tmpDic[s.(string)].Mutable {
+					tmpDic[s.(string)] = value
+					return variable
+				} else {
+					fmt.Println("La variable no es mutable")
+					return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NIL, Valor: 0, Mutable: false}
+				}
+			}
+
+		}
+		if tmpEnv.Anterior == nil {
+			break
+		} else {
+			tmpEnv = tmpEnv.Anterior.(Environment)
+		}
+	}
+	fmt.Println("La variable ", id, "no existe")
+	return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NIL, Valor: 0, Mutable: false}
 }
 
 func (env Environment) FuncValidation() bool {
